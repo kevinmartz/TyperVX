@@ -56,7 +56,7 @@ for /l %%x in (6, 1, 12) do (
 )
 
 set Directory=%HOMEDRIVE%%HOMEPATH%\AppData\Roaming\Adobe\CEP\extensions\typertools
-if exist "%Directory%\app\storage" copy "%Directory%\app\storage" __storage /Y
+if exist "%Directory%\storage" copy "%Directory%\storage" __storage /Y
 if exist "%Directory%" rmdir "%Directory%" /S/Q
 if not exist "%Directory%\*" md "%Directory%"
 
@@ -66,7 +66,7 @@ xcopy icons "%Directory%\icons\" /E/Y
 xcopy locale "%Directory%\locale\" /E/Y
 if exist .debug copy .debug "%Directory%\.debug" /Y
 if exist __storage (
-    copy __storage "%Directory%\app\storage" /Y
+    copy __storage "%Directory%\storage" /Y
     del __storage /F
 )
 
