@@ -83,7 +83,9 @@
 }
 .folder-actions {
   flex: 0 0 auto;
-  width: 18px;
+  flex-direction: row-reverse;
+  width: 36px;
+  display: flex;
   BUTTON {
     height: 18px;
     width: 18px;

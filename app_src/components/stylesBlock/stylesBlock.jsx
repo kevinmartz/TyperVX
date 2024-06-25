@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { ReactSortable } from "react-sortablejs";
 import { FiArrowRightCircle, FiPlus, FiFolderPlus, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { MdEdit, MdLock } from "react-icons/md";
+import { CiExport } from "react-icons/ci";
 
 import config from "../../config";
 import { locale, getActiveLayerText, setActiveLayerText, rgbToHex, getStyleObject } from "../../utils";
@@ -55,6 +56,24 @@ const FolderItem = React.memo(function FolderItem(props) {
     context.dispatch({ type: "setStyles", data: styles });
   };
   const styles = props.data.id ? context.state.styles.filter((s) => s.folder === props.data.id) : context.state.styles.filter((s) => !s.folder);
+
+  const exportFolder = (e) => {
+    e.stopPropagation();
+    const pathSelect = window.cep.fs.showSaveDialogEx(false, false, ["json"], props.data.name + ".json");
+    if (!pathSelect?.data) return false;
+    const exportedFolder = {};
+    exportedFolder.name = props.data.name;
+    const exportedStyles = [];
+    exportedStyles.push(
+      styles.map((style) => {
+        return { name: style.name, textProps: style.textProps };
+      })
+    );
+    exportedFolder.exportedStyles = exportedStyles;
+
+    window.cep.fs.writeFile(pathSelect.data, JSON.stringify(exportedFolder));
+  };
+
   const isOpen = props.data.id ? context.state.openFolders.includes(props.data.id) : context.state.openFolders.includes("unsorted");
   const hasActive = context.state.currentStyleId ? !!styles.find((s) => s.id === context.state.currentStyleId) : false;
   return (
@@ -67,9 +86,14 @@ const FolderItem = React.memo(function FolderItem(props) {
         </div>
         <div className="folder-actions">
           {props.data.id ? (
-            <button className="topcoat-icon-button--large--quiet" title={locale.editFolder} onClick={openFolder}>
-              <MdEdit size={14} />
-            </button>
+            <>
+              <button className="topcoat-icon-button--large--quiet" title={locale.exportFolder} onClick={exportFolder}>
+                <CiExport size={14} />
+              </button>
+              <button className="topcoat-icon-button--large--quiet" title={locale.editFolder} onClick={openFolder}>
+                <MdEdit size={14} />
+              </button>
+            </>
           ) : (
             <MdLock size={18} className="folder-locked" />
           )}
