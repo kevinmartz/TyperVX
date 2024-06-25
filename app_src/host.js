@@ -462,7 +462,7 @@ function _changeActiveLayerTextSize() {
 
     // Ajuster l'interligne
     const textStyle = newTextParams.layerText.textStyleRange[0].textStyle;
-    if (textStyle.autoLeading === true || textStyle.leading === undefined) {
+    if (textStyle.autoLeading || textStyle.leading === undefined) {
       // Si l'interligne est en auto, on le laisse en auto
       textStyle.autoLeading = true;
       // On supprime la propriété leading si elle existe pour s'assurer que l'auto soit appliqué
