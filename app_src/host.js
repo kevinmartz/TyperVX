@@ -421,6 +421,22 @@ function _changeActiveLayerTextSize() {
     }
     var newTextSize = newTextParams.layerText.textStyleRange[0].textStyle.size + changeActiveLayerTextSizeVal;
     newTextParams.layerText.textStyleRange[0].textStyle.size = newTextSize;
+
+    // Ajuster l'interligne
+    const textStyle = newTextParams.layerText.textStyleRange[0].textStyle;
+    if (textStyle.autoLeading || textStyle.leading === undefined) {
+      // Si l'interligne est en auto, on le laisse en auto
+      textStyle.autoLeading = true;
+      // On supprime la propriété leading si elle existe pour s'assurer que l'auto soit appliqué
+      delete textStyle.leading;
+    } else {
+      // Sinon, on ajuste l'interligne de la même valeur que la taille du texte
+      const oldLeading = textStyle.leading;
+      const newLeading = oldLeading + changeActiveLayerTextSizeVal;
+      textStyle.leading = newLeading;
+      textStyle.autoLeading = false;
+    }
+
     newTextParams.layerText.textStyleRange[0].to = text.length;
     if (!isPoint) {
       if (changeActiveLayerTextSizeVal > 0) {
