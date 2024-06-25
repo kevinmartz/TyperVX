@@ -55,10 +55,10 @@ const SettingsModal = React.memo(function SettingsModal() {
       });
     }
     const shortcut = {};
-    document.querySelectorAll("input[id^=shortcut_]").forEach(input => {
+    document.querySelectorAll("input[id^=shortcut_]").forEach((input) => {
       const typeShorcut = input.id.split("_").pop();
       shortcut[typeShorcut] = input.value.split(" + ");
-    })
+    });
     context.dispatch({
       type: "updateShortcut",
       shortcut: shortcut,
@@ -145,7 +145,10 @@ const SettingsModal = React.memo(function SettingsModal() {
               <div className="field-descr">{locale.settingsDefaultStyleDescr}</div>
             </div>
             <div className="field hostBrdTopContrast">
-              {Object.entries(context.state.shortcut).map(([index, value]) => <Shortcut value={value} index={index}></Shortcut>)}
+              <div className="field-label">{locale.shortcut}</div>
+              {Object.entries(context.state.shortcut).map(([index, value]) => (
+                <Shortcut value={value} index={index}></Shortcut>
+              ))}
             </div>
             <div className="field hostBrdTopContrast">
               <button type="submit" className={edited ? "topcoat-button--large--cta" : "topcoat-button--large"}>
