@@ -149,10 +149,19 @@ function _moveLayer(offsetX, offsetY) {
   executeAction(charID.Move, target, DialogModes.NO);
 }
 
+var securitySize = 20;
+
 function _createAndSetLayerText(data, width, height) {
   data.style.textProps.layerText.textKey = data.text.replace(/\n+/g, "");
   data.style.textProps.layerText.textStyleRange[0].to = data.text.length;
   data.style.textProps.layerText.paragraphStyleRange[0].to = data.text.length;
+  if (typeof data.style.textProps.layerText.textStyleRange[0].textStyle.size == "string") {
+    try {
+      var textParams = jamText.getLayerText();
+      securitySize = textParams.layerText.textStyleRange[0].textStyle.size;
+    } catch (error) {}
+    data.style.textProps.layerText.textStyleRange[0].textStyle.size = securitySize;
+  }
   data.style.textProps.layerText.textShape = [
     {
       textType: "box",
