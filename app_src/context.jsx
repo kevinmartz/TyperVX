@@ -29,8 +29,10 @@ const initialState = {
     add: ["WIN", "CTRL"],
     center: ["WIN", "ALT"],
     apply: ["WIN", "SHIFT"],
-    next: ["CTRL","ENTER"],
-    previous: ["CTRL","TAB"]
+    next: ["CTRL", "ENTER"],
+    previous: ["CTRL", "TAB"],
+    increase: ["CTRL", "SHIFT", "PLUS"],
+    decrease: ["CTRL", "SHIFT", "MINUS"],
   },
 };
 
