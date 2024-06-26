@@ -317,14 +317,29 @@ const StyleDetails = React.memo(function StyleDetails(props) {
           <div className="style-edit-props-icon" title={locale.editStyleFontSize}>
             <AiOutlineLineHeight size={24} />
           </div>
-          <input type="number" min={1} value={textStyle.size || ""} onChange={(e) => changeProp("size", Number(e.target.value) || null)} className="topcoat-text-input--large" />
+          <input
+            type="number"
+            min={1}
+            step="0.1"
+            value={textStyle.size || ""}
+            onChange={(e) => changeProp("size", parseFloat(e.target.value) || null)}
+            className="topcoat-text-input--large"
+          />
           <span className="style-edit-props-unit">{unit}</span>
         </div>
         <div className="style-edit-props-col">
           <div className="style-edit-props-icon" title={locale.editStyleFontLeading}>
             <AiOutlineColumnHeight size={24} />
           </div>
-          <input type="number" min={0} placeholder="auto" value={textStyle.leading || ""} onChange={(e) => changeLeading(Number(e.target.value))} className="topcoat-text-input--large" />
+          <input
+            type="number"
+            min={0}
+            step="0.1"
+            placeholder="auto"
+            value={textStyle.leading || ""}
+            onChange={(e) => changeLeading(parseFloat(e.target.value))}
+            className="topcoat-text-input--large"
+          />
           <span className="style-edit-props-unit">{unit}</span>
         </div>
       </div>
