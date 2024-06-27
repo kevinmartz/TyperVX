@@ -299,6 +299,7 @@ function _setActiveLayerText() {
       newTextParams.layerText.textStyleRange[0].to = text.length;
       newTextParams.layerText.paragraphStyleRange[0].to = text.length;
     }
+    newTextParams.layerText.antiAlias = oldTextParams.layerText.antiAlias || "antiAliasSmooth";
     newTextParams.layerText.textShape = [oldTextParams.layerText.textShape[0]];
     newTextParams.layerText.textShape[0].bounds.bottom *= 15;
     newTextParams.typeUnit = oldTextParams.typeUnit;
