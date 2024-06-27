@@ -304,12 +304,6 @@ function _setActiveLayerText() {
     newTextParams.layerText.textShape[0].bounds.bottom *= 15;
     newTextParams.typeUnit = oldTextParams.typeUnit;
     jamText.setLayerText(newTextParams);
-    var antiAliasParams = {
-      layerText: {
-        antiAlias: newTextParams.layerText.antiAlias,
-      },
-    };
-    jamText.setLayerText(antiAliasParams);
     var newBounds = _getCurrentTextLayerBounds();
     if (isPoint) {
       _changeToPointText();
