@@ -62,11 +62,7 @@ function _changeToBoxText() {
   reference.putEnumerated(charID.TextLayer, charID.Ordinal, charID.Target);
   var descriptor = new ActionDescriptor();
   descriptor.putReference(charID.Null, reference);
-  descriptor.putEnumerated(
-    charID.To,
-    charID.TextShapeType,
-    stringIDToTypeID("box")
-  );
+  descriptor.putEnumerated(charID.To, charID.TextShapeType, stringIDToTypeID("box"));
   executeAction(charID.Set, descriptor, DialogModes.NO);
 }
 
@@ -76,13 +72,8 @@ function _layerIsTextLayer() {
 }
 
 function _textLayerIsPointText() {
-  var textKey = _getCurrent(charID.Layer, charID.Text).getObjectValue(
-    charID.Text
-  );
-  var textType = textKey
-    .getList(stringIDToTypeID("textShape"))
-    .getObjectValue(0)
-    .getEnumerationValue(charID.TextShapeType);
+  var textKey = _getCurrent(charID.Layer, charID.Text).getObjectValue(charID.Text);
+  var textType = textKey.getList(stringIDToTypeID("textShape")).getObjectValue(0).getEnumerationValue(charID.TextShapeType);
   return textType === charID.Point;
 }
 
@@ -137,9 +128,7 @@ function _getCurrentSelectionBounds() {
 
 function _getCurrentTextLayerBounds() {
   var boundsTypeId = stringIDToTypeID("bounds");
-  var bounds = _getCurrent(charID.Layer, boundsTypeId).getObjectValue(
-    boundsTypeId
-  );
+  var bounds = _getCurrent(charID.Layer, boundsTypeId).getObjectValue(boundsTypeId);
   return _getBoundsFromDescriptor(bounds);
 }
 
@@ -147,11 +136,7 @@ function _modifySelectionBounds(amount) {
   if (amount == 0) return;
   var size = new ActionDescriptor();
   size.putUnitDouble(charID.By, charID.PixelUnit, Math.abs(amount));
-  executeAction(
-    amount > 0 ? charID.Expand : charID.Contract,
-    size,
-    DialogModes.NO
-  );
+  executeAction(amount > 0 ? charID.Expand : charID.Contract, size, DialogModes.NO);
 }
 
 function _moveLayer(offsetX, offsetY) {
@@ -170,16 +155,12 @@ function _createAndSetLayerText(data, width, height) {
   data.style.textProps.layerText.textKey = data.text.replace(/\n+/g, "");
   data.style.textProps.layerText.textStyleRange[0].to = data.text.length;
   data.style.textProps.layerText.paragraphStyleRange[0].to = data.text.length;
-  if (
-    typeof data.style.textProps.layerText.textStyleRange[0].textStyle.size ==
-    "string"
-  ) {
+  if (typeof data.style.textProps.layerText.textStyleRange[0].textStyle.size == "string") {
     try {
       var textParams = jamText.getLayerText();
       securitySize = textParams.layerText.textStyleRange[0].textStyle.size;
     } catch (error) {}
-    data.style.textProps.layerText.textStyleRange[0].textStyle.size =
-      securitySize;
+    data.style.textProps.layerText.textStyleRange[0].textStyle.size = securitySize;
   }
   data.style.textProps.layerText.textShape = [
     {
@@ -304,22 +285,12 @@ function _setActiveLayerText() {
           textKey: dataText.replace(/\n+/g, ""),
         },
       };
-      if (
-        oldTextParams.layerText.textStyleRange &&
-        oldTextParams.layerText.textStyleRange[0]
-      ) {
-        newTextParams.layerText.textStyleRange = [
-          oldTextParams.layerText.textStyleRange[0],
-        ];
+      if (oldTextParams.layerText.textStyleRange && oldTextParams.layerText.textStyleRange[0]) {
+        newTextParams.layerText.textStyleRange = [oldTextParams.layerText.textStyleRange[0]];
         newTextParams.layerText.textStyleRange[0].to = dataText.length;
       }
-      if (
-        oldTextParams.layerText.paragraphStyleRange &&
-        oldTextParams.layerText.paragraphStyleRange[0]
-      ) {
-        newTextParams.layerText.paragraphStyleRange = [
-          oldTextParams.layerText.paragraphStyleRange[0],
-        ];
+      if (oldTextParams.layerText.paragraphStyleRange && oldTextParams.layerText.paragraphStyleRange[0]) {
+        newTextParams.layerText.paragraphStyleRange = [oldTextParams.layerText.paragraphStyleRange[0]];
         newTextParams.layerText.paragraphStyleRange[0].to = dataText.length;
       }
     } else if (dataStyle) {
@@ -328,8 +299,7 @@ function _setActiveLayerText() {
       newTextParams.layerText.textStyleRange[0].to = text.length;
       newTextParams.layerText.paragraphStyleRange[0].to = text.length;
     }
-    newTextParams.layerText.antiAlias =
-      oldTextParams.layerText.antiAlias || "antiAliasSmooth";
+    newTextParams.layerText.antiAlias = oldTextParams.layerText.antiAlias || "antiAliasSmooth";
     newTextParams.layerText.textShape = [oldTextParams.layerText.textShape[0]];
     newTextParams.layerText.textShape[0].bounds.bottom *= 15;
     newTextParams.typeUnit = oldTextParams.typeUnit;
@@ -346,17 +316,11 @@ function _setActiveLayerText() {
     } else {
       var textSize = 12;
       if (dataStyle) {
-        textSize =
-          dataStyle.textProps.layerText.textStyleRange[0].textStyle.size;
-      } else if (
-        oldTextParams.layerText.textStyleRange &&
-        oldTextParams.layerText.textStyleRange[0]
-      ) {
+        textSize = dataStyle.textProps.layerText.textStyleRange[0].textStyle.size;
+      } else if (oldTextParams.layerText.textStyleRange && oldTextParams.layerText.textStyleRange[0]) {
         textSize = oldTextParams.layerText.textStyleRange[0].textStyle.size;
       }
-      newTextParams.layerText.textShape[0].bounds.bottom = _convertPixelToPoint(
-        newBounds.height + textSize + 2
-      );
+      newTextParams.layerText.textShape[0].bounds.bottom = _convertPixelToPoint(newBounds.height + textSize + 2);
       jamText.setLayerText({
         layerText: {
           textShape: newTextParams.layerText.textShape,
@@ -465,20 +429,13 @@ function _changeActiveLayerTextSize() {
       },
     };
     if (oldTextParams.layerText.paragraphStyleRange) {
-      var oldParStyle =
-        oldTextParams.layerText.paragraphStyleRange[0].paragraphStyle;
-      newTextParams.layerText.paragraphStyleRange = [
-        oldTextParams.layerText.paragraphStyleRange[0],
-      ];
-      newTextParams.layerText.paragraphStyleRange[0].paragraphStyle.textEveryLineComposer =
-        oldParStyle.textEveryLineComposer || false;
-      newTextParams.layerText.paragraphStyleRange[0].paragraphStyle.burasagari =
-        oldParStyle.burasagari || "burasagariNone";
+      var oldParStyle = oldTextParams.layerText.paragraphStyleRange[0].paragraphStyle;
+      newTextParams.layerText.paragraphStyleRange = [oldTextParams.layerText.paragraphStyleRange[0]];
+      newTextParams.layerText.paragraphStyleRange[0].paragraphStyle.textEveryLineComposer = oldParStyle.textEveryLineComposer || false;
+      newTextParams.layerText.paragraphStyleRange[0].paragraphStyle.burasagari = oldParStyle.burasagari || "burasagariNone";
       newTextParams.layerText.paragraphStyleRange[0].to = text.length;
     }
-    var newTextSize =
-      newTextParams.layerText.textStyleRange[0].textStyle.size +
-      changeActiveLayerTextSizeVal;
+    var newTextSize = newTextParams.layerText.textStyleRange[0].textStyle.size + changeActiveLayerTextSizeVal;
     newTextParams.layerText.textStyleRange[0].textStyle.size = newTextSize;
 
     // Ajuster l'interligne
@@ -499,9 +456,7 @@ function _changeActiveLayerTextSize() {
     newTextParams.layerText.textStyleRange[0].to = text.length;
     if (!isPoint) {
       if (changeActiveLayerTextSizeVal > 0) {
-        newTextParams.layerText.textShape = [
-          oldTextParams.layerText.textShape[0],
-        ];
+        newTextParams.layerText.textShape = [oldTextParams.layerText.textShape[0]];
         newTextParams.layerText.textShape[0].bounds.bottom *= 1.12;
         newTextParams.layerText.textShape[0].bounds.right *= 1.06;
       }
@@ -530,9 +485,7 @@ function _changeSize_alt() {
       var units = [];
       var proceed = true;
       for (var i = 0; i < textStyleRange.count; i++) {
-        var style = textStyleRange
-          .getObjectValue(i)
-          .getObjectValue(charID.TextStyle);
+        var style = textStyleRange.getObjectValue(i).getObjectValue(charID.TextStyle);
         sizes[i] = style.getDouble(charID.Size);
         units[i] = style.getUnitDoubleType(charID.Size);
         if (i > 0 && (sizes[i] !== sizes[i - 1] || units[i] !== units[i - 1])) {
@@ -626,37 +579,25 @@ function getActiveLayerText() {
 
 function setActiveLayerText(data) {
   setActiveLayerTextData = data;
-  app.activeDocument.suspendHistory(
-    "TyperTools Change",
-    "_setActiveLayerText()"
-  );
+  app.activeDocument.suspendHistory("TyperTools Change", "_setActiveLayerText()");
   return setActiveLayerTextResult;
 }
 
 function createTextLayerInSelection(data, point) {
   createTextLayerInSelectionData = data;
   createTextLayerInSelectionPoint = point;
-  app.activeDocument.suspendHistory(
-    "TyperTools Paste",
-    "_createTextLayerInSelection()"
-  );
+  app.activeDocument.suspendHistory("TyperTools Paste", "_createTextLayerInSelection()");
   return createTextLayerInSelectionResult;
 }
 
 function alignTextLayerToSelection() {
-  app.activeDocument.suspendHistory(
-    "TyperTools Align",
-    "_alignTextLayerToSelection()"
-  );
+  app.activeDocument.suspendHistory("TyperTools Align", "_alignTextLayerToSelection()");
   return alignTextLayerToSelectionResult;
 }
 
 function changeActiveLayerTextSize(val) {
   changeActiveLayerTextSizeVal = val;
-  app.activeDocument.suspendHistory(
-    "TyperTools Resize",
-    "_changeActiveLayerTextSize()"
-  );
+  app.activeDocument.suspendHistory("TyperTools Resize", "_changeActiveLayerTextSize()");
   return changeActiveLayerTextSizeResult;
 }
 
