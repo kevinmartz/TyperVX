@@ -13,6 +13,7 @@ TypeR is an enhanced fork of TyperTools, a Photoshop extension designed for type
 - **Resize TypeR**: Decreased size limit of the TypeR window so it can be way smaller.
 - **Line Spacing**: When you increase/decrease the size of the text with TypeR, the line spacing also increase/decrease;
 - **Adaptative size**: When you don't define a fixed size of text style, it will take the size of the current selected layer.
+- **Export a single folder**: You don't need to export all your parameters and font style anymore, you can just export/import one folder!
 
 
 ## Requirements
