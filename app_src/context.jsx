@@ -23,7 +23,6 @@ const initialState = {
   defaultStyleId: null,
   modalType: null,
   modalData: {},
-  ...storage.data,
   images: [],
   shortcut: {
     add: ["WIN", "CTRL"],
@@ -34,6 +33,7 @@ const initialState = {
     increase: ["CTRL", "SHIFT", "PLUS"],
     decrease: ["CTRL", "SHIFT", "MINUS"],
   },
+  ...storage.data,
 };
 
 const reducer = (state, action) => {
