@@ -3,7 +3,7 @@ import "./stylesBlock.scss";
 import React from "react";
 import PropTypes from "prop-types";
 import { ReactSortable } from "react-sortablejs";
-import { FiArrowRightCircle, FiPlus, FiFolderPlus, FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { FiArrowRightCircle, FiPlus, FiFolderPlus, FiChevronDown, FiChevronUp, FiCopy } from "react-icons/fi";
 import { MdEdit, MdLock } from "react-icons/md";
 import { CiExport } from "react-icons/ci";
 
@@ -73,6 +73,10 @@ const FolderItem = React.memo(function FolderItem(props) {
 
     window.cep.fs.writeFile(pathSelect.data, JSON.stringify(exportedFolder));
   };
+  const duplicateFolder = (e) => {
+    e.stopPropagation();
+    context.dispatch({ type: "duplicateFolder", data: props.data });
+  };
 
   const isOpen = props.data.id ? context.state.openFolders.includes(props.data.id) : context.state.openFolders.includes("unsorted");
   const hasActive = context.state.currentStyleId ? !!styles.find((s) => s.id === context.state.currentStyleId) : false;
@@ -92,6 +96,9 @@ const FolderItem = React.memo(function FolderItem(props) {
               </button>
               <button className="topcoat-icon-button--large--quiet" title={locale.editFolder} onClick={openFolder}>
                 <MdEdit size={14} />
+              </button>
+              <button className="topcoat-icon-button--large--quiet" title={locale.duplicateFolder} onClick={duplicateFolder}>
+                <FiCopy size={14} />
               </button>
             </>
           ) : (

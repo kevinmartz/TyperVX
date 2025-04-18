@@ -167,6 +167,21 @@ const reducer = (state, action) => {
       newState.folders = state.folders.filter((f) => f.id !== action.id);
       break;
     }
+    case "duplicateFolder": {
+      const folderToDup = action.data;
+      const newFolderId = Math.random().toString(36).substr(2, 8);
+      const newFolderName = folderToDup.name + " copy";
+      const newFolder = { id: newFolderId, name: newFolderName };
+      newState.folders = state.folders.concat(newFolder);
+      const stylesCopy = state.styles.filter((s) => s.folder === folderToDup.id);
+      const newStyles = stylesCopy.map((s) => {
+        const newStyleId = Math.random().toString(36).substr(2, 8);
+        return { ...s, id: newStyleId, folder: newFolderId };
+      });
+      newState.styles = state.styles.concat(newStyles);
+      newState.openFolders = state.openFolders.concat(newFolderId);
+      break;
+    }
 
     case "toggleFolder": {
       let open = state.openFolders.concat([]);
