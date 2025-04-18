@@ -6,7 +6,7 @@ set -e
 LANGUAGE=$(defaults read -g AppleLocale | cut -d"_" -f1)
 
 # Messages in English
-MSG_INSTALL_EN="Photoshop extension TypeR v1.0.0 will be installed."
+MSG_INSTALL_EN="Photoshop extension TypeR v0.9.0 will be installed."
 MSG_CLOSE_PHOTOSHOP_EN="Close Photoshop (if it is open)."
 MSG_PRESS_KEY_EN="Press any key to continue"
 MSG_INSTALL_COMPLETE_EN="Installation completed."
@@ -16,7 +16,7 @@ MSG_CREDITS_EN="Thanks a lot to Swirt for TyperTools and SeanR for this fork."
 MSG_DISCORD_EN="ScanR's Discord if you need help: https://discord.com/invite/Pdmfmqk"
 
 # Messages in French
-MSG_INSTALL_FR="L'extension Photoshop TypeR v1.0.0 sera installée."
+MSG_INSTALL_FR="L'extension Photoshop TypeR v0.9.0 sera installée."
 MSG_CLOSE_PHOTOSHOP_FR="Fermez Photoshop (s'il est ouvert)."
 MSG_PRESS_KEY_FR="Appuyez sur une touche pour continuer"
 MSG_INSTALL_COMPLETE_FR="Installation terminée."
@@ -26,7 +26,7 @@ MSG_CREDITS_FR="Merci beaucoup à Swirt pour TyperTools et SeanR pour ce fork."
 MSG_DISCORD_FR="Discord de ScanR si besoin d'aide : https://discord.com/invite/Pdmfmqk"
 
 # Messages in Spanish
-MSG_INSTALL_ES="La extensión de Photoshop TypeR v1.0.0 será instalada."
+MSG_INSTALL_ES="La extensión de Photoshop TypeR v0.9.0 será instalada."
 MSG_CLOSE_PHOTOSHOP_ES="Cierra Photoshop (si está abierto)."
 MSG_PRESS_KEY_ES="Presiona cualquier tecla para continuar"
 MSG_INSTALL_COMPLETE_ES="Instalación completada."
@@ -36,7 +36,7 @@ MSG_CREDITS_ES="Muchas gracias a Swirt por TyperTools y a SeanR por este fork."
 MSG_DISCORD_ES="Discord de ScanR si necesitas ayuda: https://discord.com/invite/Pdmfmqk"
 
 # Messages in Portuguese
-MSG_INSTALL_PT="A extensão Photoshop TypeR v1.0.0 será instalada."
+MSG_INSTALL_PT="A extensão Photoshop TypeR v0.9.0 será instalada."
 MSG_CLOSE_PHOTOSHOP_PT="Feche o Photoshop (se estiver aberto)."
 MSG_PRESS_KEY_PT="Pressione qualquer tecla para continuar"
 MSG_INSTALL_COMPLETE_PT="Instalação concluída."
