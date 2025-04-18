@@ -74,7 +74,15 @@ const TextBlock = React.memo(function TextBlock() {
               )}
             </div>
             <div className="text-line-insert" title={line.ignore ? "" : locale.insertText}>
-              {line.ignore ? " " : <FiArrowRightCircle size={14} onClick={() => setActiveLayerText(line.text)} />}
+              {line.ignore ? " " : (
+                <FiArrowRightCircle
+                  size={14}
+                  onClick={() => {
+                    setActiveLayerText(line.text);
+                    context.dispatch({ type: "nextLine", add: true });
+                  }}
+                />
+              )}
             </div>
           </div>
         ))}
