@@ -4,16 +4,19 @@ TypeR is an enhanced fork of TyperTools, a Photoshop extension designed for type
 
 ## Key Features
 
-- **Bug Fixes**: Multiple bugs from the original TyperTools have been fixed.
-- **Text Smoothing Issue Resolved**: Fixed the bug that changed text smoothing from "Strong" to "Smooth" when increasing text size.
-- **Stable Auto-Centering**: Text shape no longer changes when using auto-centering.
-- **Customizable Shortcuts**: You can now modify keyboards shortcuts. (+ added some new keyboard shortcuts)
-- **Automatic Page Detection**: Automatically detects pages when importing.
-- **Automatic Page Switching**: Automatically switches pages for seamless workflow.
-- **Resize TypeR**: Decreased size limit of the TypeR window so it can be way smaller.
-- **Line Spacing**: When you increase/decrease the size of the text with TypeR, the line spacing also increase/decrease along.
-- **Adaptative size**: When you don't define a fixed size of text style, it will take the size of the current selected layer.
-- **Export a single folder**: You don't need to export all your parameters and font style anymore, you can just export/import one folder!
+- **Bug Fixes**: Multiple bugs from the original TyperTools have been fixed.  
+- **Text Smoothing Issue Resolved**: Fixed the bug that changed text smoothing from "Strong" to "Smooth" when increasing text size.  
+- **Stable Auto-Centering**: Text shape no longer changes when using auto-centering.  
+- **Customizable Shortcuts**: You can now modify keyboard shortcuts. (+ added some new keyboard shortcuts)  
+- **Automatic Page Detection**: Automatically detects pages when importing.  
+- **Automatic Page Switching**: Automatically switches pages for seamless workflow.  
+- **Resize TypeR**: Decreased size limit of the TypeR window so it can be much smaller.  
+- **Line Spacing Sync**: When increasing/decreasing text size with TypeR, line spacing adjusts accordingly.  
+- **Adaptive Size**: If no fixed text size is defined, the size of the selected layer will be used.  
+- **Line Break on Insert**: A line break is now automatically added when inserting text on the current layer.  
+- **Duplicate Style Folders**: You can now duplicate a style folder easily.  
+- **Export a Single Folder**: No need to export all parameters and font styles—just export/import one folder as needed.  
+
 
 
 ## Requirements
