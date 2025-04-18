@@ -155,7 +155,8 @@ function _createAndSetLayerText(data, width, height) {
   data.style.textProps.layerText.textKey = data.text.replace(/\n+/g, "");
   data.style.textProps.layerText.textStyleRange[0].to = data.text.length;
   data.style.textProps.layerText.paragraphStyleRange[0].to = data.text.length;
-  if (typeof data.style.textProps.layerText.textStyleRange[0].textStyle.size == "string") {
+  var sizeProp = data.style.textProps.layerText.textStyleRange[0].textStyle.size;
+  if (typeof sizeProp !== "number") {
     try {
       var textParams = jamText.getLayerText();
       securitySize = textParams.layerText.textStyleRange[0].textStyle.size;
@@ -276,6 +277,12 @@ function _setActiveLayerText() {
     var newTextParams;
     if (dataText && dataStyle) {
       newTextParams = dataStyle.textProps;
+      if (newTextParams.layerText.textStyleRange[0].textStyle.size == null &&
+          oldTextParams.layerText.textStyleRange &&
+          oldTextParams.layerText.textStyleRange[0] &&
+          oldTextParams.layerText.textStyleRange[0].textStyle.size != null) {
+        newTextParams.layerText.textStyleRange[0].textStyle.size = oldTextParams.layerText.textStyleRange[0].textStyle.size;
+      }
       newTextParams.layerText.textKey = dataText.replace(/\n+/g, "");
       newTextParams.layerText.textStyleRange[0].to = dataText.length;
       newTextParams.layerText.paragraphStyleRange[0].to = dataText.length;
@@ -309,9 +316,10 @@ function _setActiveLayerText() {
       _changeToPointText();
     } else {
       var textSize = 12;
-      if (dataStyle) {
-        textSize = dataStyle.textProps.layerText.textStyleRange[0].textStyle.size;
-      } else if (oldTextParams.layerText.textStyleRange && oldTextParams.layerText.textStyleRange[0]) {
+      var styleSize = dataStyle && dataStyle.textProps.layerText.textStyleRange[0].textStyle.size;
+      if (styleSize != null) {
+        textSize = styleSize;
+      } else if (oldTextParams.layerText.textStyleRange && oldTextParams.layerText.textStyleRange[0] && oldTextParams.layerText.textStyleRange[0].textStyle.size != null) {
         textSize = oldTextParams.layerText.textStyleRange[0].textStyle.size;
       }
       newTextParams.layerText.textShape[0].bounds.bottom = _convertPixelToPoint(newBounds.height + textSize + 2);
