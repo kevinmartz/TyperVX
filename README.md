@@ -22,7 +22,7 @@ TypeR is an better version of TyperTools, a Photoshop extension designed for typ
 ## Requirements
 
 - Windows 8/macOS 10.9 or newer.
-- Adobe Photoshop CC 2015 or newer.
+- Adobe Photoshop CC 2020 or newer.
   (There may be problems with some portable or lightweight builds)
 
 ## Installation Guide
