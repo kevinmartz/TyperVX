@@ -1,7 +1,7 @@
-TITLE Typer Tools Pack
+TITLE TypeR Pack
 
 set /p version=Version: 
-SET name=typertools-%version%
+SET name=TypeR-%version%
 SET tmpDir=tmpPackDir
 SET sert=selfDB.p12
 SET pass=12345
