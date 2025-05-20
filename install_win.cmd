@@ -1,14 +1,20 @@
 @echo off
+chcp 65001 >nul
 setlocal EnableDelayedExpansion
 
-rem Detect the system language
-for /f "tokens=3" %%a in ('reg query "HKCU\Control Panel\International" /v LocaleName 2^>nul') do (
-    set locale=%%a
-)
+rem — Extraction de la version — 
+for /f "tokens=5 delims=<>=/ " %%V in ('
+    findstr /i "<Extension Id=\"typer\"" "CSXS\manifest.xml"
+') do set "EXT_VERSION=%%~V"
 
-rem Set messages based on detected language
+rem — Détection de la langue système —
+for /f "tokens=3" %%a in (
+    'reg query "HKCU\Control Panel\International" /v LocaleName 2^>nul'
+) do set locale=%%a
+
+rem — Messages localisés utilisant !EXT_VERSION! —
 if "%locale:~0,2%"=="fr" (
-    set msg_install="L'extension Photoshop TypeR v0.9.0 sera installée."
+    set msg_install="L'extension Photoshop TypeR v!EXT_VERSION! sera installée."
     set msg_close="Fermez Photoshop (s'il est ouvert)."
     set msg_complete="Installation terminée."
     set msg_open="Ouvrez Photoshop et dans le menu supérieur cliquez sur : [Fenêtre] ^> [Extensions] ^> [TypeR]"
@@ -16,7 +22,7 @@ if "%locale:~0,2%"=="fr" (
     set msg_credits="Merci beaucoup à Swirt pour TyperTools et SeanR pour ce fork."
     set msg_discord="Discord de ScanR si besoin d'aide : https://discord.com/invite/Pdmfmqk"
 ) else if "%locale:~0,2%"=="es" (
-    set msg_install="La extensión de Photoshop TypeR v0.9.0 se instalará."
+    set msg_install="La extensión de Photoshop TypeR v!EXT_VERSION! se instalará."
     set msg_close="Cierra Photoshop (si está abierto)."
     set msg_complete="Instalación completada."
     set msg_open="Abre Photoshop y en el menú superior haz clic en lo siguiente: [Ventana] ^> [Extensiones] ^> [TypeR]"
@@ -24,7 +30,7 @@ if "%locale:~0,2%"=="fr" (
     set msg_credits="Muchas gracias a Swirt por TyperTools y a SeanR por este fork."
     set msg_discord="Discord de ScanR si necesitas ayuda: https://discord.com/invite/Pdmfmqk"
 ) else if "%locale:~0,2%"=="pt" (
-    set msg_install="A extensão do Photoshop TypeR v0.9.0 será instalada."
+    set msg_install="Photoshop extension TypeR v!EXT_VERSION! will be installed."
     set msg_close="Feche o Photoshop (se estiver aberto)."
     set msg_complete="Instalação concluída."
     set msg_open="Abra o Photoshop e no menu superior clique em: [Janela] ^> [Extensões] ^> [TypeR]"
@@ -32,7 +38,7 @@ if "%locale:~0,2%"=="fr" (
     set msg_credits="Muito obrigado a Swirt pelo TyperTools e a SeanR por este fork."
     set msg_discord="Discord do ScanR se precisar de ajuda: https://discord.com/invite/Pdmfmqk"
 ) else (
-    set msg_install="Photoshop extension TypeR v0.9.0 will be installed."
+    set msg_install="Photoshop extension TypeR v1.0.0 will be installed."
     set msg_close="Close Photoshop (if it is open)."
     set msg_complete="Installation completed."
     set msg_open="Open Photoshop and in the upper menu click the following: [Window] ^> [Extensions] ^> [TypeR]"

@@ -1,12 +1,29 @@
 #!/bin/sh
-
 set -e
 
-# Detect system language
+# —————————————————————————————————————————————————————————————
+# Répertoire du script (pour pointer sur manifest.xml)
+# —————————————————————————————————————————————————————————————
+SRCDIR=$(cd "$(dirname "$0")" && pwd)
+
+# —————————————————————————————————————————————————————————————
+# Récupération de la version depuis CSXS/manifest.xml
+# —————————————————————————————————————————————————————————————
+MANIFEST="$SRCDIR/CSXS/manifest.xml"
+EXT_VERSION=$(grep -oE '<Extension Id="typer" Version="[^"]+"' "$MANIFEST" \
+  | sed -E 's/.*Version="([^"]+)".*/\1/')
+# (optionnel : debug)
+# echo "Version détectée : $EXT_VERSION"
+
+# —————————————————————————————————————————————————————————————
+# Détection de la langue système
+# —————————————————————————————————————————————————————————————
 LANGUAGE=$(defaults read -g AppleLocale | cut -d"_" -f1)
 
-# Messages in English
-MSG_INSTALL_EN="Photoshop extension TypeR v0.9.0 will be installed."
+# —————————————————————————————————————————————————————————————
+# Messages en anglais
+# —————————————————————————————————————————————————————————————
+MSG_INSTALL_EN="Photoshop extension TypeR v$EXT_VERSION will be installed."
 MSG_CLOSE_PHOTOSHOP_EN="Close Photoshop (if it is open)."
 MSG_PRESS_KEY_EN="Press any key to continue"
 MSG_INSTALL_COMPLETE_EN="Installation completed."
@@ -15,8 +32,10 @@ MSG_PRESS_ENTER_EN="Press Enter to continue"
 MSG_CREDITS_EN="Thanks a lot to Swirt for TyperTools and SeanR for this fork."
 MSG_DISCORD_EN="ScanR's Discord if you need help: https://discord.com/invite/Pdmfmqk"
 
-# Messages in French
-MSG_INSTALL_FR="L'extension Photoshop TypeR v0.9.0 sera installée."
+# —————————————————————————————————————————————————————————————
+# Messages en français
+# —————————————————————————————————————————————————————————————
+MSG_INSTALL_FR="L'extension Photoshop TypeR v$EXT_VERSION sera installée."
 MSG_CLOSE_PHOTOSHOP_FR="Fermez Photoshop (s'il est ouvert)."
 MSG_PRESS_KEY_FR="Appuyez sur une touche pour continuer"
 MSG_INSTALL_COMPLETE_FR="Installation terminée."
@@ -25,8 +44,10 @@ MSG_PRESS_ENTER_FR="Appuyez sur Entrée pour continuer"
 MSG_CREDITS_FR="Merci beaucoup à Swirt pour TyperTools et SeanR pour ce fork."
 MSG_DISCORD_FR="Discord de ScanR si besoin d'aide : https://discord.com/invite/Pdmfmqk"
 
-# Messages in Spanish
-MSG_INSTALL_ES="La extensión de Photoshop TypeR v0.9.0 será instalada."
+# —————————————————————————————————————————————————————————————
+# Messages en espagnol
+# —————————————————————————————————————————————————————————————
+MSG_INSTALL_ES="La extensión de Photoshop TypeR v$EXT_VERSION será instalada."
 MSG_CLOSE_PHOTOSHOP_ES="Cierra Photoshop (si está abierto)."
 MSG_PRESS_KEY_ES="Presiona cualquier tecla para continuar"
 MSG_INSTALL_COMPLETE_ES="Instalación completada."
@@ -35,8 +56,10 @@ MSG_PRESS_ENTER_ES="Presiona Enter para continuar"
 MSG_CREDITS_ES="Muchas gracias a Swirt por TyperTools y a SeanR por este fork."
 MSG_DISCORD_ES="Discord de ScanR si necesitas ayuda: https://discord.com/invite/Pdmfmqk"
 
-# Messages in Portuguese
-MSG_INSTALL_PT="A extensão Photoshop TypeR v0.9.0 será instalada."
+# —————————————————————————————————————————————————————————————
+# Messages en portugais
+# —————————————————————————————————————————————————————————————
+MSG_INSTALL_PT="A extensão Photoshop TypeR v$EXT_VERSION será instalada."
 MSG_CLOSE_PHOTOSHOP_PT="Feche o Photoshop (se estiver aberto)."
 MSG_PRESS_KEY_PT="Pressione qualquer tecla para continuar"
 MSG_INSTALL_COMPLETE_PT="Instalação concluída."
@@ -45,7 +68,9 @@ MSG_PRESS_ENTER_PT="Pressione Enter para continuar"
 MSG_CREDITS_PT="Muito obrigado ao Swirt pelo TyperTools e ao SeanR por este fork."
 MSG_DISCORD_PT="Discord do ScanR se precisar de ajuda: https://discord.com/invite/Pdmfmqk"
 
-# Set messages based on system language
+# —————————————————————————————————————————————————————————————
+# Affectation des messages en fonction de la langue
+# —————————————————————————————————————————————————————————————
 if [ "$LANGUAGE" = "fr" ]; then
   MSG_INSTALL=$MSG_INSTALL_FR
   MSG_CLOSE_PHOTOSHOP=$MSG_CLOSE_PHOTOSHOP_FR
@@ -84,6 +109,9 @@ else
   MSG_DISCORD=$MSG_DISCORD_EN
 fi
 
+# —————————————————————————————————————————————————————————————
+# Affichage des messages et pause
+# —————————————————————————————————————————————————————————————
 cat << EOF
 $MSG_INSTALL
 
@@ -93,8 +121,9 @@ EOF
 read -n 1 -p "$MSG_PRESS_KEY"
 echo
 
-SRCDIR=$(cd "$(dirname "$0")" && pwd)
-
+# —————————————————————————————————————————————————————————————
+# Activation du mode debug pour CSXS 6 à 12
+# —————————————————————————————————————————————————————————————
 is_preferences_domain_exists() {
   defaults read "$1" > /dev/null 2> /dev/null
 }
@@ -104,19 +133,20 @@ for version in {6..12}; do
     defaults write com.adobe.CSXS.${version} PlayerDebugMode 1
   fi
 done
-killall -u `whoami` csprefsd > /dev/null 2> /dev/null || true
+killall -u "$(whoami)" csprefsd > /dev/null 2> /dev/null || true
 
+# —————————————————————————————————————————————————————————————
+# Copie des fichiers d'extension
+# —————————————————————————————————————————————————————————————
 DESTDIR="${HOME}/Library/Application Support/Adobe/CEP/extensions/typertools"
 
 if [ -e "${DESTDIR}/storage" ]; then
   cp "${DESTDIR}/storage" "${SRCDIR}/__storage"
 fi
 
-if [ -e "${DESTDIR}" ]; then
-  rm -rf "${DESTDIR}"
-fi
-
+rm -rf "${DESTDIR}"
 mkdir -p "${DESTDIR}"
+
 for item in app CSXS icons locale .debug; do
   if [ -e "${SRCDIR}/${item}" ]; then
     cp -rf "${SRCDIR}/${item}" "${DESTDIR}/${item}"
@@ -128,6 +158,9 @@ if [ -e "${SRCDIR}/__storage" ]; then
   rm -f "${SRCDIR}/__storage"
 fi
 
+# —————————————————————————————————————————————————————————————
+# Fin et dernières info à l'utilisateur
+# —————————————————————————————————————————————————————————————
 cat << EOF
 
 $MSG_INSTALL_COMPLETE
