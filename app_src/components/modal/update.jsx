@@ -27,7 +27,6 @@ const UpdateModal = React.memo(function UpdateModal() {
           <p>{locale.updateText.replace('{version}', version)}</p>
           {body && (
             <React.Fragment>
-              <h4>{locale.updateChanges}</h4>
               <div dangerouslySetInnerHTML={{ __html: body }} />
             </React.Fragment>
           )}
