@@ -38,7 +38,7 @@ if "%locale:~0,2%"=="fr" (
     set msg_credits="Muito obrigado a Swirt pelo TyperTools e a SeanR por este fork."
     set msg_discord="Discord do ScanR se precisar de ajuda: https://discord.com/invite/Pdmfmqk"
 ) else (
-    set msg_install="Photoshop extension TypeR v1.0.0 will be installed."
+    set msg_install="Photoshop extension TypeR v!EXT_VERSION! will be installed."
     set msg_close="Close Photoshop (if it is open)."
     set msg_complete="Installation completed."
     set msg_open="Open Photoshop and in the upper menu click the following: [Window] ^> [Extensions] ^> [TypeR]"
