@@ -8,6 +8,23 @@ const locale = csInterface.initResourceBundle();
 
 const openUrl = window.cep.util.openURLInDefaultBrowser;
 
+const checkUpdate = async (currentVersion) => {
+  try {
+    const response = await fetch(
+      "https://api.github.com/repos/ScanR/TypeR/releases/latest",
+      { headers: { Accept: "application/vnd.github.v3.html+json" } }
+    );
+    if (!response.ok) return null;
+    const data = await response.json();
+    if (data.tag_name && data.tag_name !== currentVersion) {
+      return { version: data.tag_name, body: data.body_html || data.body };
+    }
+  } catch (e) {
+    console.error("Update check failed", e);
+  }
+  return null;
+};
+
 const readStorage = (key) => {
   const result = window.cep.fs.readFile(storagePath);
   if (result.err) {
@@ -221,4 +238,4 @@ const openFile = (path) => {
   csInterface.evalScript("openFile('" + path + "')");
 };
 
-export { csInterface, locale, openUrl, readStorage, writeToStorage, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, setActiveLayerText, createTextLayerInSelection, alignTextLayerToSelection, changeActiveLayerTextSize, getHotkeyPressed, resizeTextArea, scrollToLine, scrollToStyle, rgbToHex, getStyleObject, getDefaultStyle, openFile };
+export { csInterface, locale, openUrl, readStorage, writeToStorage, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, setActiveLayerText, createTextLayerInSelection, alignTextLayerToSelection, changeActiveLayerTextSize, getHotkeyPressed, resizeTextArea, scrollToLine, scrollToStyle, rgbToHex, getStyleObject, getDefaultStyle, openFile, checkUpdate };

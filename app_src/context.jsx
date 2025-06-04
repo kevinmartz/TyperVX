@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { locale, readStorage, writeToStorage, scrollToLine, scrollToStyle } from "./utils";
+import { locale, readStorage, writeToStorage, scrollToLine, scrollToStyle, checkUpdate } from "./utils";
+import config from "./config";
 
 const storage = readStorage();
 const storeFields = ["notFirstTime", "text", "styles", "folders", "textScale", "currentLineIndex", "currentStyleId", "pastePointText", "ignoreLinePrefixes", "defaultStyleId", "shortcut"];
@@ -371,6 +372,13 @@ const useContext = () => React.useContext(Context);
 const ContextProvider = React.memo(function ContextProvider(props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   React.useEffect(() => dispatch({}), []);
+  React.useEffect(() => {
+    checkUpdate(config.appVersion).then((data) => {
+      if (data) {
+        dispatch({ type: 'setModal', modal: 'update', data });
+      }
+    });
+  }, []);
   return <Context.Provider value={{ state, dispatch }}>{props.children}</Context.Provider>;
 });
 ContextProvider.propTypes = {
