@@ -1,7 +1,7 @@
 import "./footer.scss";
 
 import React from "react";
-import { locale, nativeAlert, openFile, openFile as utilsOpenFile } from "../../utils";
+import { locale, nativeAlert, openFile } from "../../utils";
 import { useContext } from "../../context";
 
 const AppFooter = React.memo(function AppFooter() {
