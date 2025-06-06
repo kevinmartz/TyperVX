@@ -4,7 +4,7 @@ import { locale, readStorage, writeToStorage, scrollToLine, scrollToStyle, check
 import config from "./config";
 
 const storage = readStorage();
-const storeFields = ["notFirstTime", "text", "styles", "folders", "textScale", "currentLineIndex", "currentStyleId", "pastePointText", "ignoreLinePrefixes", "defaultStyleId", "shortcut"];
+const storeFields = ["notFirstTime", "text", "styles", "folders", "textScale", "currentLineIndex", "currentStyleId", "pastePointText", "ignoreLinePrefixes", "defaultStyleId", "shortcut", "language"];
 
 const initialState = {
   notFirstTime: false,
@@ -25,6 +25,7 @@ const initialState = {
   modalType: null,
   modalData: {},
   images: [],
+  language: "auto",
   shortcut: {
     add: ["WIN", "CTRL"],
     center: ["WIN", "ALT"],
@@ -241,10 +242,15 @@ const reducer = (state, action) => {
       break;
     }
 
-    case "setPastePointText": {
-      newState.pastePointText = !!action.isPoint;
-      break;
-    }
+  case "setPastePointText": {
+    newState.pastePointText = !!action.isPoint;
+    break;
+  }
+
+  case "setLanguage": {
+    newState.language = action.lang || "auto";
+    break;
+  }
 
     case "setModal": {
       newState.modalType = action.modal || null;
