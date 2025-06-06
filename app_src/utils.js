@@ -155,8 +155,11 @@ const scrollToStyle = (styleId, delay = 100) => {
 };
 
 const rgbToHex = (rgb = {}) => {
-  const componentToHex = (c = 0) => ("0" + c.toString(16)).substr(-2).toUpperCase();
-  return "#" + componentToHex(rgb.red) + componentToHex(rgb.green) + componentToHex(rgb.blue);
+  const componentToHex = (c = 0) => ("0" + Math.round(c).toString(16)).substr(-2).toUpperCase();
+  const r = rgb.red != null ? rgb.red : rgb.r;
+  const g = rgb.green != null ? rgb.green : rgb.g;
+  const b = rgb.blue != null ? rgb.blue : rgb.b;
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 };
 
 const getStyleObject = (textStyle) => {
