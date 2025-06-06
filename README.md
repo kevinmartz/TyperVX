@@ -15,7 +15,8 @@ TypeR is a better version of TyperTools, a Photoshop extension designed for type
 - **Adaptive Size**: If no fixed text size is defined, the size of the selected layer will be used.  
 - **Line Break on Insert**: A line break is now automatically added when inserting text on the current layer.  
 - **Duplicate Style Folders**: You can now duplicate a style folder easily.  
-- **Export a Single Folder**: No need to export all parameters and font styles—just export/import one folder as needed.  
+- **Export a Single Folder**: No need to export all parameters and font styles—just export/import one folder as needed.
+- **Change Language**: Select the interface language directly from the settings.
 
 
 

@@ -4,7 +4,7 @@ const csInterface = new window.CSInterface();
 const path = csInterface.getSystemPath(window.SystemPath.EXTENSION);
 const storagePath = path + "/storage";
 
-const locale = csInterface.initResourceBundle();
+let locale = {};
 
 const openUrl = window.cep.util.openURLInDefaultBrowser;
 
@@ -51,6 +51,55 @@ const writeToStorage = (data, rewrite) => {
     return !result.err;
   }
 };
+
+const parseLocaleFile = (str) => {
+  const result = {};
+  if (!str) return result;
+  const lines = str.replace(/\r/g, "").split("\n");
+  let key = null;
+  let val = "";
+  for (let line of lines) {
+    if (line.startsWith("#")) continue;
+    if (key) {
+      val += line;
+      if (val.endsWith("\\")) {
+        val = val.slice(0, -1) + "\n";
+        continue;
+      }
+      result[key] = val;
+      key = null;
+      val = "";
+      continue;
+    }
+    const i = line.indexOf("=");
+    if (i === -1) continue;
+    key = line.slice(0, i).trim();
+    val = line.slice(i + 1);
+    if (val.endsWith("\\")) {
+      val = val.slice(0, -1) + "\n";
+      continue;
+    }
+    result[key] = val;
+    key = null;
+    val = "";
+  }
+  return result;
+};
+
+const initLocale = () => {
+  locale = csInterface.initResourceBundle();
+  const lang = readStorage("language");
+  if (lang && lang !== "auto" && lang !== "en_US") {
+    const file = `${path}/locale/${lang}/messages.properties`;
+    const result = window.cep.fs.readFile(file);
+    if (!result.err) {
+      const data = parseLocaleFile(result.data);
+      locale = Object.assign(locale, data);
+    }
+  }
+};
+
+initLocale();
 
 const nativeAlert = (text, title, isError) => {
   const data = JSON.stringify({ text, title, isError });
