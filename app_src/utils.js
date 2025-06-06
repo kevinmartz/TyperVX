@@ -240,7 +240,7 @@ const getDefaultStyle = () => {
 const getDefaultStroke = () => {
   return {
     enabled: false,
-    size: 3,
+    size: 0,
     opacity: 100,
     position: "outer",
     color: { r: 255, g: 255, b: 255 },
