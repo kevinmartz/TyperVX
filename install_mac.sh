@@ -29,7 +29,7 @@ MSG_PRESS_KEY_EN="Press any key to continue"
 MSG_INSTALL_COMPLETE_EN="Installation completed."
 MSG_OPEN_PHOTOSHOP_EN="Open Photoshop and in the menu click the following: [Window] > [Extensions] > [TypeR]"
 MSG_PRESS_ENTER_EN="Press Enter to continue"
-MSG_CREDITS_EN="Thanks a lot to Swirt for TyperTools and SeanR for this fork."
+MSG_CREDITS_EN="Thanks a lot to Swirt for TyperTools and SeanR & Sakushi for this fork."
 MSG_DISCORD_EN="ScanR's Discord if you need help: https://discord.com/invite/Pdmfmqk"
 
 # —————————————————————————————————————————————————————————————
@@ -41,7 +41,7 @@ MSG_PRESS_KEY_FR="Appuyez sur une touche pour continuer"
 MSG_INSTALL_COMPLETE_FR="Installation terminée."
 MSG_OPEN_PHOTOSHOP_FR="Ouvrez Photoshop et dans le menu cliquez sur : [Fenêtre] > [Extensions] > [TypeR]"
 MSG_PRESS_ENTER_FR="Appuyez sur Entrée pour continuer"
-MSG_CREDITS_FR="Merci beaucoup à Swirt pour TyperTools et SeanR pour ce fork."
+MSG_CREDITS_FR="Merci beaucoup à Swirt pour TyperTools et SeanR & Sakushi pour ce fork."
 MSG_DISCORD_FR="Discord de ScanR si besoin d'aide : https://discord.com/invite/Pdmfmqk"
 
 # —————————————————————————————————————————————————————————————
@@ -53,7 +53,7 @@ MSG_PRESS_KEY_ES="Presiona cualquier tecla para continuar"
 MSG_INSTALL_COMPLETE_ES="Instalación completada."
 MSG_OPEN_PHOTOSHOP_ES="Abre Photoshop y en el menú haz clic en: [Ventana] > [Extensiones] > [TypeR]"
 MSG_PRESS_ENTER_ES="Presiona Enter para continuar"
-MSG_CREDITS_ES="Muchas gracias a Swirt por TyperTools y a SeanR por este fork."
+MSG_CREDITS_ES="Muchas gracias a Swirt por TyperTools y a SeanR & Sakushi por este fork."
 MSG_DISCORD_ES="Discord de ScanR si necesitas ayuda: https://discord.com/invite/Pdmfmqk"
 
 # —————————————————————————————————————————————————————————————
@@ -65,7 +65,7 @@ MSG_PRESS_KEY_PT="Pressione qualquer tecla para continuar"
 MSG_INSTALL_COMPLETE_PT="Instalação concluída."
 MSG_OPEN_PHOTOSHOP_PT="Abra o Photoshop e no menu clique em: [Janela] > [Extensões] > [TypeR]"
 MSG_PRESS_ENTER_PT="Pressione Enter para continuar"
-MSG_CREDITS_PT="Muito obrigado ao Swirt pelo TyperTools e ao SeanR por este fork."
+MSG_CREDITS_PT="Muito obrigado ao Swirt pelo TyperTools e ao SeanR & Sakushi por este fork."
 MSG_DISCORD_PT="Discord do ScanR se precisar de ajuda: https://discord.com/invite/Pdmfmqk"
 
 # —————————————————————————————————————————————————————————————
