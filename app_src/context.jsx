@@ -1,9 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { locale, readStorage, writeToStorage, scrollToLine, scrollToStyle } from "./utils";
+import { locale, readStorage, writeToStorage, scrollToLine, scrollToStyle, checkUpdate } from "./utils";
+import config from "./config";
 
 const storage = readStorage();
-const storeFields = ["notFirstTime", "text", "styles", "folders", "textScale", "currentLineIndex", "currentStyleId", "pastePointText", "ignoreLinePrefixes", "defaultStyleId", "shortcut"];
+const storeFields = [
+  "notFirstTime",
+  "text",
+  "styles",
+  "folders",
+  "textScale",
+  "currentLineIndex",
+  "currentStyleId",
+  "pastePointText",
+  "ignoreLinePrefixes",
+  "defaultStyleId",
+  "autoClosePSD",
+  "shortcut",
+  "language",
+];
 
 const initialState = {
   notFirstTime: false,
@@ -21,9 +36,11 @@ const initialState = {
   pastePointText: false,
   ignoreLinePrefixes: ["##"],
   defaultStyleId: null,
+  autoClosePSD: false,
   modalType: null,
   modalData: {},
   images: [],
+  language: "auto",
   shortcut: {
     add: ["WIN", "CTRL"],
     center: ["WIN", "ALT"],
@@ -240,10 +257,20 @@ const reducer = (state, action) => {
       break;
     }
 
-    case "setPastePointText": {
-      newState.pastePointText = !!action.isPoint;
-      break;
-    }
+  case "setPastePointText": {
+    newState.pastePointText = !!action.isPoint;
+    break;
+  }
+
+  case "setAutoClosePSD": {
+    newState.autoClosePSD = !!action.value;
+    break;
+  }
+
+  case "setLanguage": {
+    newState.language = action.lang || "auto";
+    break;
+  }
 
     case "setModal": {
       newState.modalType = action.modal || null;
@@ -371,6 +398,13 @@ const useContext = () => React.useContext(Context);
 const ContextProvider = React.memo(function ContextProvider(props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   React.useEffect(() => dispatch({}), []);
+  React.useEffect(() => {
+    checkUpdate(config.appVersion).then((data) => {
+      if (data) {
+        dispatch({ type: 'setModal', modal: 'update', data });
+      }
+    });
+  }, []);
   return <Context.Provider value={{ state, dispatch }}>{props.children}</Context.Provider>;
 });
 ContextProvider.propTypes = {

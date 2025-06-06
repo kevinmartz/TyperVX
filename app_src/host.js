@@ -149,6 +149,77 @@ function _moveLayer(offsetX, offsetY) {
   executeAction(charID.Move, target, DialogModes.NO);
 }
 
+/**
+ * Retrieve stroke information from the active layer.
+ * Returns null if no stroke is found.
+ */
+function _getLayerStroke() {
+  var ref = new ActionReference();
+  ref.putProperty(charIDToTypeID("Prpr"), charIDToTypeID("Lefx"));
+  ref.putEnumerated(charIDToTypeID("Lyr "), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
+  var desc = executeActionGet(ref);
+  if (!desc.hasKey(charIDToTypeID("Lefx"))) return null;
+
+  var fx = desc.getObjectValue(charIDToTypeID("Lefx"));
+  if (!fx.hasKey(charIDToTypeID("FrFX"))) return null;
+
+  var fr = fx.getObjectValue(charIDToTypeID("FrFX"));
+  var col = fr.getObjectValue(charIDToTypeID("Clr "));
+
+  return {
+    enabled: fr.getBoolean(charIDToTypeID("enab")),
+    position: fr.getEnumerationValue(charIDToTypeID("Styl")) == charIDToTypeID("OutF") ? "outer" : "other",
+    size: fr.getUnitDoubleValue(charIDToTypeID("Sz  ")),
+    opacity: fr.getUnitDoubleValue(charIDToTypeID("Opct")),
+    color: {
+      r: col.getDouble(charIDToTypeID("Rd  ")),
+      g: col.getDouble(charIDToTypeID("Grn ")),
+      b: col.getDouble(charIDToTypeID("Bl  ")),
+    },
+  };
+}
+
+/**
+ * Apply or update a stroke on the active layer.
+ * @param {Object} stroke - {size, color:{r,g,b}, opacity, enabled}
+ *                          position is forced to "outer".
+ */
+function _setLayerStroke(stroke) {
+  if (!stroke || stroke.enabled === false) return;
+
+  var d = new ActionDescriptor();
+  var r = new ActionReference();
+  r.putProperty(charIDToTypeID("Prpr"), charIDToTypeID("Lefx"));
+  r.putEnumerated(charIDToTypeID("Lyr "), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
+  d.putReference(charIDToTypeID("null"), r);
+
+  var fx = new ActionDescriptor();
+  fx.putUnitDouble(charIDToTypeID("Scl "), charIDToTypeID("#Prc"), 100);
+
+  var fr = new ActionDescriptor();
+  fr.putBoolean(charIDToTypeID("enab"), true);
+  fr.putBoolean(stringIDToTypeID("present"), true);
+  fr.putBoolean(stringIDToTypeID("showInDialog"), true);
+
+  fr.putEnumerated(charIDToTypeID("Styl"), charIDToTypeID("FStl"), charIDToTypeID("OutF"));
+  fr.putEnumerated(charIDToTypeID("PntT"), charIDToTypeID("FrFl"), charIDToTypeID("SClr"));
+  fr.putEnumerated(charIDToTypeID("Md  "), charIDToTypeID("BlnM"), charIDToTypeID("Nrml"));
+
+  fr.putUnitDouble(charIDToTypeID("Sz  "), charIDToTypeID("#Pxl"), stroke.size || 3);
+  fr.putUnitDouble(charIDToTypeID("Opct"), charIDToTypeID("#Prc"), stroke.opacity || 100);
+
+  var c = new ActionDescriptor();
+  c.putDouble(charIDToTypeID("Rd  "), stroke.color.r);
+  c.putDouble(charIDToTypeID("Grn "), stroke.color.g);
+  c.putDouble(charIDToTypeID("Bl  "), stroke.color.b);
+  fr.putObject(charIDToTypeID("Clr "), charIDToTypeID("RGBC"), c);
+
+  fx.putObject(charIDToTypeID("FrFX"), charIDToTypeID("FrFX"), fr);
+  d.putObject(charIDToTypeID("T   "), charIDToTypeID("Lefx"), fx);
+
+  executeAction(charIDToTypeID("setd"), d, DialogModes.NO);
+}
+
 var securitySize = 20;
 
 function _createAndSetLayerText(data, width, height) {
@@ -179,6 +250,9 @@ function _createAndSetLayerText(data, width, height) {
     target: ["<reference>", [["textLayer", ["<class>", null]]]],
     using: jamText.toLayerTextObject(data.style.textProps),
   });
+  if (data.style.stroke) {
+    _setLayerStroke(data.style.stroke);
+  }
 }
 
 function _setTextBoxSize(width, height) {
@@ -311,6 +385,9 @@ function _setActiveLayerText() {
     newTextParams.layerText.textShape[0].bounds.bottom *= 15;
     newTextParams.typeUnit = oldTextParams.typeUnit;
     jamText.setLayerText(newTextParams);
+    if (dataStyle && dataStyle.stroke) {
+      _setLayerStroke(dataStyle.stroke);
+    }
     var newBounds = _getCurrentTextLayerBounds();
     if (isPoint) {
       _changeToPointText();
@@ -398,6 +475,8 @@ function _alignTextLayerToSelection() {
 
 var changeActiveLayerTextSizeVal;
 var changeActiveLayerTextSizeResult;
+
+var _lastOpenedDocId = null;
 
 function _changeActiveLayerTextSize() {
   if (!documents.length) {
@@ -576,6 +655,7 @@ function getActiveLayerText() {
   }
   return jamJSON.stringify({
     textProps: jamText.getLayerText(),
+    stroke: _getLayerStroke(),
   });
 }
 
@@ -603,6 +683,20 @@ function changeActiveLayerTextSize(val) {
   return changeActiveLayerTextSizeResult;
 }
 
-function openFile(path) {
-  app.open(File(path));
+function openFile(path, autoClose) {
+  if (autoClose && _lastOpenedDocId !== null) {
+    for (var i = 0; i < app.documents.length; i++) {
+      var doc = app.documents[i];
+      if (doc.id === _lastOpenedDocId) {
+        try {
+          doc.close(SaveOptions.DONOTSAVECHANGES);
+        } catch (e) {}
+        break;
+      }
+    }
+  }
+  var newDoc = app.open(File(path));
+  if (autoClose) {
+    _lastOpenedDocId = newDoc.id;
+  }
 }

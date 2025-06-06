@@ -13,6 +13,10 @@ const SettingsModal = React.memo(function SettingsModal() {
   const [pastePointText, setPastePointText] = React.useState(context.state.pastePointText ? "1" : "");
   const [ignoreLinePrefixes, setIgnoreLinePrefixes] = React.useState(context.state.ignoreLinePrefixes.join(" "));
   const [defaultStyleId, setDefaultStyleId] = React.useState(context.state.defaultStyleId || "");
+  const [language, setLanguage] = React.useState(context.state.language || "auto");
+  const [autoClosePSD, setAutoClosePSD] = React.useState(
+    !!context.state.autoClosePSD
+  );
   const [edited, setEdited] = React.useState(false);
 
   const close = () => {
@@ -34,6 +38,16 @@ const SettingsModal = React.memo(function SettingsModal() {
     setEdited(true);
   };
 
+  const changeLanguage = (e) => {
+    setLanguage(e.target.value);
+    setEdited(true);
+  };
+
+  const changeAutoClosePSD = (e) => {
+    setAutoClosePSD(e.target.checked);
+    setEdited(true);
+  };
+
   const save = (e) => {
     e.preventDefault();
     if (pastePointText !== context.state.pastePointText) {
@@ -52,6 +66,19 @@ const SettingsModal = React.memo(function SettingsModal() {
       context.dispatch({
         type: "setDefaultStyleId",
         id: defaultStyleId,
+      });
+    }
+    if (language !== context.state.language) {
+      context.dispatch({
+        type: "setLanguage",
+        lang: language,
+      });
+      setTimeout(() => window.location.reload(), 100);
+    }
+    if (autoClosePSD !== context.state.autoClosePSD) {
+      context.dispatch({
+        type: "setAutoClosePSD",
+        value: autoClosePSD,
       });
     }
     const shortcut = {};
@@ -77,6 +104,7 @@ const SettingsModal = React.memo(function SettingsModal() {
       try {
         const data = JSON.parse(result.data);
         context.dispatch({ type: "import", data });
+        setTimeout(() => window.location.reload(), 100);
         close();
       } catch (error) {
         nativeAlert(locale.errorImportStyles, locale.errorTitle, true);
@@ -92,6 +120,8 @@ const SettingsModal = React.memo(function SettingsModal() {
       JSON.stringify({
         ignoreLinePrefixes: context.state.ignoreLinePrefixes,
         defaultStyleId: context.state.defaultStyleId,
+        language: context.state.language,
+        autoClosePSD: context.state.autoClosePSD,
         textItemKind: context.state.setTextItemKind,
         folders: context.state.folders,
         styles: context.state.styles,
@@ -143,6 +173,27 @@ const SettingsModal = React.memo(function SettingsModal() {
                 </select>
               </div>
               <div className="field-descr">{locale.settingsDefaultStyleDescr}</div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsLanguageLabel}</div>
+              <div className="field-input">
+                <select value={language} onChange={changeLanguage} className="topcoat-textarea">
+                  {Object.entries(config.languages).map(([code, name]) => (
+                    <option key={code} value={code}>
+                      {code === "auto" ? locale.settingsLanguageAuto : name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsAutoClosePsdLabel}</div>
+              <div className="field-input">
+                <label className="topcoat-checkbox">
+                  <input type="checkbox" checked={autoClosePSD} onChange={changeAutoClosePSD} />
+                  <div className="topcoat-checkbox__checkmark"></div>
+                </label>
+              </div>
             </div>
             <div className="field hostBrdTopContrast">
               <div className="field-label">{locale.shortcut}</div>
