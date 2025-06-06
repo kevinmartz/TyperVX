@@ -476,6 +476,8 @@ function _alignTextLayerToSelection() {
 var changeActiveLayerTextSizeVal;
 var changeActiveLayerTextSizeResult;
 
+var _lastOpenedDocId = null;
+
 function _changeActiveLayerTextSize() {
   if (!documents.length) {
     changeActiveLayerTextSizeResult = "doc";
@@ -681,6 +683,20 @@ function changeActiveLayerTextSize(val) {
   return changeActiveLayerTextSizeResult;
 }
 
-function openFile(path) {
-  app.open(File(path));
+function openFile(path, autoClose) {
+  if (autoClose && _lastOpenedDocId !== null) {
+    for (var i = 0; i < app.documents.length; i++) {
+      var doc = app.documents[i];
+      if (doc.id === _lastOpenedDocId) {
+        try {
+          doc.close(SaveOptions.DONOTSAVECHANGES);
+        } catch (e) {}
+        break;
+      }
+    }
+  }
+  var newDoc = app.open(File(path));
+  if (autoClose) {
+    _lastOpenedDocId = newDoc.id;
+  }
 }
