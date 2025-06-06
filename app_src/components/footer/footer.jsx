@@ -29,7 +29,7 @@ const AppFooter = React.memo(function AppFooter() {
           const baseName = name.substring(0, name.length - extName.length - 1);
           return { name: name, baseName: baseName, path: url };
         })
-        .sort((a, b) => a.baseName - b.baseName);
+        .sort((a, b) => a.baseName.localeCompare(b.baseName));
       context.dispatch({
         type: "setImages",
         images: images,
