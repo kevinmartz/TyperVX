@@ -89,8 +89,11 @@ const parseLocaleFile = (str) => {
 const initLocale = () => {
   locale = csInterface.initResourceBundle();
   const lang = readStorage("language");
-  if (lang && lang !== "auto" && lang !== "en_US") {
-    const file = `${path}/locale/${lang}/messages.properties`;
+  if (lang && lang !== "auto") {
+    const file =
+      lang === "en_US"
+        ? `${path}/locale/messages.properties`
+        : `${path}/locale/${lang}/messages.properties`;
     const result = window.cep.fs.readFile(file);
     if (!result.err) {
       const data = parseLocaleFile(result.data);
