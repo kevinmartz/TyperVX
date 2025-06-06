@@ -102,7 +102,7 @@ const createTextLayerInSelection = (text, style, pointText, callback = () => {})
     return false;
   }
   if (!style) {
-    style = { textProps: getDefaultStyle() };
+    style = { textProps: getDefaultStyle(), stroke: getDefaultStroke() };
   }
   const data = JSON.stringify({ text, style });
   csInterface.evalScript("createTextLayerInSelection(" + data + ", " + !!pointText + ")", (error) => {
@@ -234,8 +234,18 @@ const getDefaultStyle = () => {
   };
 };
 
+const getDefaultStroke = () => {
+  return {
+    enabled: false,
+    size: 3,
+    opacity: 100,
+    position: "outer",
+    color: { r: 255, g: 255, b: 255 },
+  };
+};
+
 const openFile = (path) => {
   csInterface.evalScript("openFile('" + path + "')");
 };
 
-export { csInterface, locale, openUrl, readStorage, writeToStorage, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, setActiveLayerText, createTextLayerInSelection, alignTextLayerToSelection, changeActiveLayerTextSize, getHotkeyPressed, resizeTextArea, scrollToLine, scrollToStyle, rgbToHex, getStyleObject, getDefaultStyle, openFile, checkUpdate };
+export { csInterface, locale, openUrl, readStorage, writeToStorage, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, setActiveLayerText, createTextLayerInSelection, alignTextLayerToSelection, changeActiveLayerTextSize, getHotkeyPressed, resizeTextArea, scrollToLine, scrollToStyle, rgbToHex, getStyleObject, getDefaultStyle, getDefaultStroke, openFile, checkUpdate };
