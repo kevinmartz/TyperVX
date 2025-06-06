@@ -153,6 +153,14 @@
         }
     }
 }
+.style-edit-stroke {
+    display: flex;
+    align-items: center;
+    INPUT {
+        max-width: 70px;
+        margin-right: 8px;
+    }
+}
 .color-picker-overlay {
     position: fixed;
     height: 100%;

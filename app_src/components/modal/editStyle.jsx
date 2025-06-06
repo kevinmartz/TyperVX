@@ -14,7 +14,7 @@ import { AiOutlineLineHeight, AiOutlineFontSize, AiOutlineColumnHeight, AiOutlin
 import { SketchPicker } from "react-color";
 
 import config from "../../config";
-import { locale, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, rgbToHex, getDefaultStyle } from "../../utils";
+import { locale, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, rgbToHex, getDefaultStyle, getDefaultStroke } from "../../utils";
 import { useContext } from "../../context";
 
 const EditStyleModal = React.memo(function EditStyleModal() {
@@ -26,6 +26,8 @@ const EditStyleModal = React.memo(function EditStyleModal() {
   const [prefixes, setPrefixes] = React.useState(currentData.prefixes?.join(" ") || "");
   const [prefixColor, setPrefixColor] = React.useState(currentData.prefixColor || config.defaultPrefixColor);
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
+  const [stroke, setStroke] = React.useState(currentData.stroke || getDefaultStroke());
+  const [strokePickerOpen, setStrokePickerOpen] = React.useState(false);
   const [edited, setEdited] = React.useState(false);
   const nameInputRef = React.useRef();
 
@@ -63,6 +65,7 @@ const EditStyleModal = React.memo(function EditStyleModal() {
       delete data.textProps.layerText.bounds;
       delete data.textProps.layerText.warp;
       setTextProps(data.textProps);
+      if (data.stroke) setStroke(data.stroke);
       setEdited(true);
     });
   };
@@ -82,13 +85,23 @@ const EditStyleModal = React.memo(function EditStyleModal() {
     setEdited(true);
   };
 
+  const changeStrokeSize = (e) => {
+    setStroke({ ...stroke, size: parseFloat(e.target.value) || 0 });
+    setEdited(true);
+  };
+
+  const changeStrokeColor = (e) => {
+    setStroke({ ...stroke, color: { r: e.rgb.r, g: e.rgb.g, b: e.rgb.b } });
+    setEdited(true);
+  };
+
   const saveStyle = (e) => {
     e.preventDefault();
     if (!name || !textProps) {
       nativeAlert(locale.errorStyleCreation, locale.errorTitle, true);
       return false;
     }
-    const data = { name, folder, textProps, prefixes, prefixColor };
+    const data = { name, folder, textProps, prefixes, prefixColor, stroke };
     if (currentData.create) {
       data.id = Math.random().toString(36).substr(2, 8);
     } else {
@@ -171,6 +184,32 @@ const EditStyleModal = React.memo(function EditStyleModal() {
                   <div className="style-edit-color-sample m-opacity" title={locale.editStyleColorButton} onClick={() => setColorPickerOpen(true)}>
                     <div style={{ background: prefixColor }}></div>
                     <span>{prefixColor}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.editStyleStrokeLabel}</div>
+              <div className="field-input">
+                <div className="style-edit-stroke">
+                  <input
+                    type="number"
+                    min={0}
+                    value={stroke.size}
+                    onChange={changeStrokeSize}
+                    className="topcoat-text-input--large"
+                  />
+                  <div className="style-edit-color m-right">
+                    {strokePickerOpen && (
+                      <React.Fragment>
+                        <div className="color-picker-overlay" onClick={() => setStrokePickerOpen(false)}></div>
+                        <SketchPicker disableAlpha={true} color={rgbToHex(stroke.color)} onChange={changeStrokeColor} />
+                      </React.Fragment>
+                    )}
+                    <div className="style-edit-color-sample" title={locale.editStyleColorButton} onClick={() => setStrokePickerOpen(true)}>
+                      <div style={{ background: rgbToHex(stroke.color) }}></div>
+                      <span>{rgbToHex(stroke.color)}</span>
+                    </div>
                   </div>
                 </div>
               </div>

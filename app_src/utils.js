@@ -102,7 +102,7 @@ const createTextLayerInSelection = (text, style, pointText, callback = () => {})
     return false;
   }
   if (!style) {
-    style = { textProps: getDefaultStyle() };
+    style = { textProps: getDefaultStyle(), stroke: getDefaultStroke() };
   }
   const data = JSON.stringify({ text, style });
   csInterface.evalScript("createTextLayerInSelection(" + data + ", " + !!pointText + ")", (error) => {
@@ -155,8 +155,11 @@ const scrollToStyle = (styleId, delay = 100) => {
 };
 
 const rgbToHex = (rgb = {}) => {
-  const componentToHex = (c = 0) => ("0" + c.toString(16)).substr(-2).toUpperCase();
-  return "#" + componentToHex(rgb.red) + componentToHex(rgb.green) + componentToHex(rgb.blue);
+  const componentToHex = (c = 0) => ("0" + Math.round(c).toString(16)).substr(-2).toUpperCase();
+  const r = rgb.red != null ? rgb.red : rgb.r;
+  const g = rgb.green != null ? rgb.green : rgb.g;
+  const b = rgb.blue != null ? rgb.blue : rgb.b;
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 };
 
 const getStyleObject = (textStyle) => {
@@ -234,8 +237,18 @@ const getDefaultStyle = () => {
   };
 };
 
+const getDefaultStroke = () => {
+  return {
+    enabled: false,
+    size: 0,
+    opacity: 100,
+    position: "outer",
+    color: { r: 255, g: 255, b: 255 },
+  };
+};
+
 const openFile = (path) => {
   csInterface.evalScript("openFile('" + path + "')");
 };
 
-export { csInterface, locale, openUrl, readStorage, writeToStorage, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, setActiveLayerText, createTextLayerInSelection, alignTextLayerToSelection, changeActiveLayerTextSize, getHotkeyPressed, resizeTextArea, scrollToLine, scrollToStyle, rgbToHex, getStyleObject, getDefaultStyle, openFile, checkUpdate };
+export { csInterface, locale, openUrl, readStorage, writeToStorage, nativeAlert, nativeConfirm, getUserFonts, getActiveLayerText, setActiveLayerText, createTextLayerInSelection, alignTextLayerToSelection, changeActiveLayerTextSize, getHotkeyPressed, resizeTextArea, scrollToLine, scrollToStyle, rgbToHex, getStyleObject, getDefaultStyle, getDefaultStroke, openFile, checkUpdate };
