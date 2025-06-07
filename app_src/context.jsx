@@ -310,10 +310,14 @@ const reducer = (state, action) => {
   newState.styles = sortedStyles;
 
   const stylePrefixes = [];
+  const folderPrefixes = [];
+  const currentFolder = state.currentStyle ? state.currentStyle.folder || null : null;
   for (const style of newState.styles) {
     const folder = style.folder || null;
     for (const prefix of style.prefixes) {
-      stylePrefixes.push({ prefix, style, folder });
+      const data = { prefix, style, folder };
+      stylePrefixes.push(data);
+      if (folder === currentFolder) folderPrefixes.push(data);
     }
   }
 
@@ -322,7 +326,9 @@ const reducer = (state, action) => {
   const last = [];
   newState.lines = rawLines.map((rawText, rawIndex) => {
     const ignorePrefix = newState.ignoreLinePrefixes.find((pr) => rawText.startsWith(pr)) || "";
-    const hasStylePrefix = stylePrefixes.find((sp) => rawText.startsWith(sp.prefix));
+    const hasStylePrefix =
+      folderPrefixes.find((sp) => rawText.startsWith(sp.prefix)) ||
+      stylePrefixes.find((sp) => rawText.startsWith(sp.prefix));
     const stylePrefix = hasStylePrefix ? hasStylePrefix.prefix : "";
     const style = hasStylePrefix ? hasStylePrefix.style : null;
     const text = rawText.replace(ignorePrefix, "").replace(stylePrefix, "").trim();
