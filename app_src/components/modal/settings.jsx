@@ -97,6 +97,7 @@ const SettingsModal = React.memo(function SettingsModal() {
   const importSettings = () => {
     const pathSelect = window.cep.fs.showOpenDialogEx(true, false, null, null, ["json"]);
     if (!pathSelect?.data?.length) return false;
+    let foldersImported = 0;
     pathSelect.data.forEach((path) => {
       const result = window.cep.fs.readFile(path);
       if (result.err) {
@@ -113,10 +114,47 @@ const SettingsModal = React.memo(function SettingsModal() {
                 name: style.name,
                 folder: dataFolder.id,
                 textProps: style.textProps,
+                prefixes: style.prefixes || [],
+                prefixColor: style.prefixColor,
               };
               dataStyle.id = Math.random().toString(36).substring(2, 8);
               dataStyle.edited = Date.now();
               context.dispatch({ type: "saveStyle", data: dataStyle });
+            });
+            foldersImported++;
+          } else if (
+            data.folders &&
+            data.styles &&
+            !data.ignoreLinePrefixes &&
+            !data.defaultStyleId &&
+            !data.language &&
+            !data.autoClosePSD &&
+            !data.textItemKind
+          ) {
+            const idMap = {};
+            data.folders.forEach((folder) => {
+              const newId = Math.random().toString(36).substring(2, 8);
+              idMap[folder.id] = newId;
+              context.dispatch({
+                type: "saveFolder",
+                data: { id: newId, name: folder.name },
+              });
+              foldersImported++;
+            });
+            data.styles.forEach((style) => {
+              const newId = Math.random().toString(36).substring(2, 8);
+              context.dispatch({
+                type: "saveStyle",
+                data: {
+                  id: newId,
+                  name: style.name,
+                  folder: style.folder ? idMap[style.folder] : null,
+                  textProps: style.textProps,
+                  prefixes: style.prefixes || [],
+                  prefixColor: style.prefixColor,
+                  edited: Date.now(),
+                },
+              });
             });
           } else {
             context.dispatch({ type: "import", data });
@@ -128,6 +166,15 @@ const SettingsModal = React.memo(function SettingsModal() {
         }
       }
     });
+    if (foldersImported > 0) {
+      nativeAlert(
+        foldersImported > 1
+          ? locale.importFoldersSuccess
+          : locale.importFolderSuccess,
+        locale.successTitle,
+        false
+      );
+    }
   };
 
   const exportSettings = () => {
