@@ -57,8 +57,15 @@ const EditFolderModal = React.memo(function EditFolderModal() {
     const deleteFolder = e => {
         e.preventDefault();
         if (!currentData.id) return;
-        nativeConfirm(locale.confirmDeleteFolder, locale.confirmTitle, ok => {
+        const permanent = e.shiftKey;
+        const confirmText = permanent ? locale.confirmDeleteFolderPermanent : locale.confirmDeleteFolder;
+        nativeConfirm(confirmText, locale.confirmTitle, ok => {
             if (!ok) return;
+            if (permanent) {
+                context.state.styles.filter(s => s.folder === currentData.id).forEach(s => {
+                    context.dispatch({type: 'deleteStyle', id: s.id});
+                });
+            }
             context.dispatch({type: 'deleteFolder', id: currentData.id});
             close();
         });
