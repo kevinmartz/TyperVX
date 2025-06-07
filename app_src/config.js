@@ -1,6 +1,6 @@
 const config = {
   appTitle: "TypeR",
-  appVersion: "1.0.0",
+  appVersion: "2.0.0",
   appUrl: "https://typer.hayasaku.fr/",
   authorName: "Swirt & SeanR & Sakushi",
   authorUrl: "https://discord.gg/dsHn3xQQTC",
