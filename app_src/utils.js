@@ -300,8 +300,9 @@ const getDefaultStroke = () => {
 };
 
 const openFile = (path, autoClose = false) => {
+  const encodedPath = JSON.stringify(path);
   csInterface.evalScript(
-    "openFile('" + path + "', " + (autoClose ? "true" : "false") + ")"
+    "openFile(" + encodedPath + ", " + (autoClose ? "true" : "false") + ")"
   );
 };
 
