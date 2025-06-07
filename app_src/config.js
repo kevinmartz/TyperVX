@@ -4,7 +4,7 @@ const config = {
   appUrl: "https://typer.hayasaku.fr/",
   authorName: "Swirt & SeanR & Sakushi",
   authorUrl: "https://discord.gg/dsHn3xQQTC",
-  exportFileName: "TyperToolsExport",
+  exportFileName: "TypeR_Export",
   defaultPrefixColor: "#FFF3B0",
   languages: {
     auto: "Auto",

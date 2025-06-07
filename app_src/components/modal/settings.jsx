@@ -95,40 +95,92 @@ const SettingsModal = React.memo(function SettingsModal() {
   };
 
   const importSettings = () => {
-    const pathSelect = window.cep.fs.showOpenDialogEx(false, false, null, null, ["json"]);
-    if (!pathSelect?.data?.[0]) return false;
-    const result = window.cep.fs.readFile(pathSelect.data[0]);
-    if (result.err) {
-      nativeAlert(locale.errorImportStyles, locale.errorTitle, true);
-    } else {
-      try {
-        const data = JSON.parse(result.data);
-        context.dispatch({ type: "import", data });
-        setTimeout(() => window.location.reload(), 100);
-        close();
-      } catch (error) {
+    const pathSelect = window.cep.fs.showOpenDialogEx(true, false, null, null, ["json"]);
+    if (!pathSelect?.data?.length) return false;
+    let foldersImported = 0;
+    pathSelect.data.forEach((path) => {
+      const result = window.cep.fs.readFile(path);
+      if (result.err) {
         nativeAlert(locale.errorImportStyles, locale.errorTitle, true);
+      } else {
+        try {
+          const data = JSON.parse(result.data);
+          if (data.exportedStyles) {
+            const dataFolder = { name: data.name };
+            dataFolder.id = Math.random().toString(36).substring(2, 8);
+            context.dispatch({ type: "saveFolder", data: dataFolder });
+            data.exportedStyles.forEach((style) => {
+              const dataStyle = {
+                name: style.name,
+                folder: dataFolder.id,
+                textProps: style.textProps,
+                prefixes: style.prefixes || [],
+                prefixColor: style.prefixColor,
+                stroke: style.stroke,
+              };
+              dataStyle.id = Math.random().toString(36).substring(2, 8);
+              dataStyle.edited = Date.now();
+              context.dispatch({ type: "saveStyle", data: dataStyle });
+            });
+            foldersImported++;
+          } else if (
+            data.folders &&
+            data.styles &&
+            !data.ignoreLinePrefixes &&
+            !data.defaultStyleId &&
+            !data.language &&
+            !data.autoClosePSD &&
+            !data.textItemKind
+          ) {
+            const idMap = {};
+            data.folders.forEach((folder) => {
+              const newId = Math.random().toString(36).substring(2, 8);
+              idMap[folder.id] = newId;
+              context.dispatch({
+                type: "saveFolder",
+                data: { id: newId, name: folder.name },
+              });
+              foldersImported++;
+            });
+            data.styles.forEach((style) => {
+              const newId = Math.random().toString(36).substring(2, 8);
+              context.dispatch({
+                type: "saveStyle",
+                data: {
+                  id: newId,
+                  name: style.name,
+                  folder: style.folder ? idMap[style.folder] : null,
+                  textProps: style.textProps,
+                  prefixes: style.prefixes || [],
+                  prefixColor: style.prefixColor,
+                  stroke: style.stroke,
+                  edited: Date.now(),
+                },
+              });
+            });
+          } else {
+            context.dispatch({ type: "import", data });
+            setTimeout(() => window.location.reload(), 100);
+            close();
+          }
+        } catch (error) {
+          nativeAlert(locale.errorImportStyles, locale.errorTitle, true);
+        }
       }
+    });
+    if (foldersImported > 0) {
+      nativeAlert(
+        foldersImported > 1
+          ? locale.importFoldersSuccess
+          : locale.importFolderSuccess,
+        locale.successTitle,
+        false
+      );
     }
   };
 
   const exportSettings = () => {
-    const pathSelect = window.cep.fs.showSaveDialogEx(false, false, ["json"], config.exportFileName + ".json");
-    if (!pathSelect?.data) return false;
-    window.cep.fs.writeFile(
-      pathSelect.data,
-      JSON.stringify({
-        ignoreLinePrefixes: context.state.ignoreLinePrefixes,
-        defaultStyleId: context.state.defaultStyleId,
-        language: context.state.language,
-        autoClosePSD: context.state.autoClosePSD,
-        textItemKind: context.state.setTextItemKind,
-        folders: context.state.folders,
-        styles: context.state.styles,
-        version: config.appVersion,
-        exported: new Date(),
-      })
-    );
+    context.dispatch({ type: "setModal", modal: "export" });
   };
 
   return (

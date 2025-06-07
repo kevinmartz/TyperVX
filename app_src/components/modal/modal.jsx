@@ -6,6 +6,7 @@ import HelpModal from './help';
 import SettingsModal from './settings';
 import EditStyleModal from './editStyle';
 import EditFolderModal from './editFolder';
+import ExportModal from './export';
 import UpdateModal from './update';
 
 
@@ -18,6 +19,7 @@ const Modal = React.memo(function Modal() {
     else if (modalType === 'settings') modalContent = <SettingsModal />;
     else if (modalType === 'editStyle') modalContent = <EditStyleModal />;
     else if (modalType === 'editFolder') modalContent = <EditFolderModal />;
+    else if (modalType === 'export') modalContent = <ExportModal />;
     else if (modalType === 'update') modalContent = <UpdateModal />;
 
     React.useEffect(() => {

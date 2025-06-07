@@ -66,7 +66,13 @@ const FolderItem = React.memo(function FolderItem(props) {
     const exportedStyles = [];
     exportedStyles.push(
       ...styles.map((style) => {
-        return { name: style.name, textProps: style.textProps };
+        return {
+          name: style.name,
+          textProps: style.textProps,
+          prefixes: style.prefixes,
+          prefixColor: style.prefixColor,
+          stroke: style.stroke,
+        };
       })
     );
     exportedFolder.exportedStyles = exportedStyles;
