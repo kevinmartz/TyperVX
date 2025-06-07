@@ -6,6 +6,7 @@ const config = {
   authorUrl: "https://discord.gg/dsHn3xQQTC",
   exportFileName: "TypeR_Export",
   defaultPrefixColor: "#FFF3B0",
+  checkUpdates: true,
   languages: {
     auto: "Auto",
     en_US: "English",
