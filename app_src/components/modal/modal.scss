@@ -55,3 +55,17 @@
     font-size: 12px;
     flex: 0 0 auto;
 }
+
+.export-folder-item,
+.export-settings-item {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+}
+.export-folder-item + .export-folder-item {
+    margin-top: 4px;
+}
+.export-folder-title,
+.export-settings-title {
+    margin-left: 6px;
+}
