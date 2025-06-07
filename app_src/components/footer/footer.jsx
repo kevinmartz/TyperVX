@@ -37,12 +37,12 @@ const AppFooter = React.memo(function AppFooter() {
       <span className="link" onClick={openSettings}>
         {locale.footerSettings}
       </span>
-      <HiddenFileInput ref={fileInputRef} />
       <span className="link" onClick={openRepository}>
         {context.state.images.length
           ? locale.footerDesyncRepo
           : locale.footerOpenRepo}
       </span>
+      <HiddenFileInput ref={fileInputRef} />
     </React.Fragment>
   );
 });
