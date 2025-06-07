@@ -116,6 +116,7 @@ const SettingsModal = React.memo(function SettingsModal() {
                 textProps: style.textProps,
                 prefixes: style.prefixes || [],
                 prefixColor: style.prefixColor,
+                stroke: style.stroke,
               };
               dataStyle.id = Math.random().toString(36).substring(2, 8);
               dataStyle.edited = Date.now();
@@ -152,6 +153,7 @@ const SettingsModal = React.memo(function SettingsModal() {
                   textProps: style.textProps,
                   prefixes: style.prefixes || [],
                   prefixColor: style.prefixColor,
+                  stroke: style.stroke,
                   edited: Date.now(),
                 },
               });
