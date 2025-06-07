@@ -139,6 +139,28 @@ function _modifySelectionBounds(amount) {
   executeAction(amount > 0 ? charID.Expand : charID.Contract, size, DialogModes.NO);
 }
 
+function _createMagicWandSelection(tolerance) {
+  try {
+    var bounds = _getCurrentTextLayerBounds();
+    var x = Math.max(bounds.left - 5, 0);
+    var y = Math.max(bounds.yMid, 0);
+    var desc = new ActionDescriptor();
+    var ref = new ActionReference();
+    ref.putProperty(charID.Channel, charID.FrameSelect);
+    desc.putReference(charID.Null, ref);
+
+    var pos = new ActionDescriptor();
+    pos.putUnitDouble(charID.Horizontal, charID.PixelUnit, x);
+    pos.putUnitDouble(charID.Vertical, charID.PixelUnit, y);
+    desc.putObject(charID.To, stringIDToTypeID("paint"), pos);
+
+    desc.putInteger(stringIDToTypeID("tolerance"), tolerance || 20);
+    desc.putBoolean(stringIDToTypeID("merged"), true);
+    desc.putBoolean(stringIDToTypeID("antiAlias"), true);
+    executeAction(charID.Set, desc, DialogModes.NO);
+  } catch (e) {}
+}
+
 function _moveLayer(offsetX, offsetY) {
   var amount = new ActionDescriptor();
   amount.putUnitDouble(charID.Horizontal, charID.PixelUnit, offsetX);
@@ -458,8 +480,14 @@ function _alignTextLayerToSelection() {
   }
   var selection = _checkSelection();
   if (selection.error) {
-    createTextLayerInSelectionResult = selection.error;
-    return;
+    if (selection.error === "noSelection") {
+      _createMagicWandSelection(20);
+      selection = _checkSelection();
+    }
+    if (selection.error) {
+      createTextLayerInSelectionResult = selection.error;
+      return;
+    }
   }
   var isPoint = _textLayerIsPointText();
   var bounds = _getCurrentTextLayerBounds();
