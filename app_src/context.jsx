@@ -16,6 +16,7 @@ const storeFields = [
   "ignoreLinePrefixes",
   "defaultStyleId",
   "autoClosePSD",
+  "checkUpdates",
   "images",
   "shortcut",
   "language",
@@ -38,6 +39,7 @@ const initialState = {
   ignoreLinePrefixes: ["##"],
   defaultStyleId: null,
   autoClosePSD: false,
+  checkUpdates: config.checkUpdates,
   modalType: null,
   modalData: {},
   images: [],
@@ -279,6 +281,11 @@ const reducer = (state, action) => {
     break;
   }
 
+  case "setCheckUpdates": {
+    newState.checkUpdates = !!action.value;
+    break;
+  }
+
   case "setLanguage": {
     newState.language = action.lang || "auto";
     break;
@@ -417,12 +424,14 @@ const ContextProvider = React.memo(function ContextProvider(props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   React.useEffect(() => dispatch({}), []);
   React.useEffect(() => {
-    checkUpdate(config.appVersion).then((data) => {
-      if (data) {
-        dispatch({ type: 'setModal', modal: 'update', data });
-      }
-    });
-  }, []);
+    if (state.checkUpdates) {
+      checkUpdate(config.appVersion).then((data) => {
+        if (data) {
+          dispatch({ type: 'setModal', modal: 'update', data });
+        }
+      });
+    }
+  }, [state.checkUpdates]);
   return <Context.Provider value={{ state, dispatch }}>{props.children}</Context.Provider>;
 });
 ContextProvider.propTypes = {

@@ -4,7 +4,7 @@ import { MdSave } from "react-icons/md";
 import { FaFileExport, FaFileImport } from "react-icons/fa";
 
 import config from "../../config";
-import { locale, nativeAlert } from "../../utils";
+import { locale, nativeAlert, checkUpdate } from "../../utils";
 import { useContext } from "../../context";
 import Shortcut from "./shortCut";
 
@@ -16,6 +16,9 @@ const SettingsModal = React.memo(function SettingsModal() {
   const [language, setLanguage] = React.useState(context.state.language || "auto");
   const [autoClosePSD, setAutoClosePSD] = React.useState(
     !!context.state.autoClosePSD
+  );
+  const [checkUpdates, setCheckUpdates] = React.useState(
+    context.state.checkUpdates !== false
   );
   const [edited, setEdited] = React.useState(false);
 
@@ -45,6 +48,11 @@ const SettingsModal = React.memo(function SettingsModal() {
 
   const changeAutoClosePSD = (e) => {
     setAutoClosePSD(e.target.checked);
+    setEdited(true);
+  };
+
+  const changeCheckUpdates = (e) => {
+    setCheckUpdates(e.target.checked);
     setEdited(true);
   };
 
@@ -79,6 +87,12 @@ const SettingsModal = React.memo(function SettingsModal() {
       context.dispatch({
         type: "setAutoClosePSD",
         value: autoClosePSD,
+      });
+    }
+    if (checkUpdates !== context.state.checkUpdates) {
+      context.dispatch({
+        type: "setCheckUpdates",
+        value: checkUpdates,
       });
     }
     const shortcut = {};
@@ -183,6 +197,16 @@ const SettingsModal = React.memo(function SettingsModal() {
     context.dispatch({ type: "setModal", modal: "export" });
   };
 
+  const checkUpdatesNow = () => {
+    checkUpdate(config.appVersion).then((data) => {
+      if (data) {
+        context.dispatch({ type: "setModal", modal: "update", data });
+      } else {
+        nativeAlert(locale.updateNoUpdate, locale.successTitle, false);
+      }
+    });
+  };
+
   return (
     <React.Fragment>
       <div className="app-modal-header hostBrdBotContrast">
@@ -248,6 +272,15 @@ const SettingsModal = React.memo(function SettingsModal() {
               </div>
             </div>
             <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsCheckUpdatesLabel}</div>
+              <div className="field-input">
+                <label className="topcoat-checkbox">
+                  <input type="checkbox" checked={checkUpdates} onChange={changeCheckUpdates} />
+                  <div className="topcoat-checkbox__checkmark"></div>
+                </label>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
               <div className="field-label">{locale.shortcut}</div>
               {Object.entries(context.state.shortcut).map(([index, value]) => (
                 <Shortcut value={value} index={index}></Shortcut>
@@ -268,6 +301,11 @@ const SettingsModal = React.memo(function SettingsModal() {
             <div className="field">
               <button className="topcoat-button--large" onClick={exportSettings}>
                 <FaFileExport size={18} /> {locale.settingsExport}
+              </button>
+            </div>
+            <div className="field">
+              <button className="topcoat-button--large" onClick={checkUpdatesNow}>
+                {locale.settingsCheckUpdatesButton}
               </button>
             </div>
           </div>
