@@ -19,6 +19,10 @@ const AppFooter = React.memo(function AppFooter() {
     });
   };
   const openRepository = () => {
+    if (context.state.images.length) {
+      context.dispatch({ type: "setImages", images: [] });
+      return;
+    }
     const extension = ["psd", "png", "jpg", "jpeg"];
     const result = window.cep.fs.showOpenDialogEx(true, false, "Open Images", "", extension);
     if (result.err == 0) {
@@ -48,7 +52,9 @@ const AppFooter = React.memo(function AppFooter() {
         {locale.footerSettings}
       </span>
       <span className="link" onClick={openRepository}>
-        {locale.footerOpenRepo}
+        {context.state.images.length
+          ? locale.footerDesyncRepo
+          : locale.footerOpenRepo}
       </span>
     </React.Fragment>
   );
