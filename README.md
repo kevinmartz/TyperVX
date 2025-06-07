@@ -37,7 +37,7 @@ TypeR is a better version of TyperTools, a Photoshop extension designed for type
 1. Clone the repository and navigate to the root directory in your terminal.
 
    ```sh
-   git clone https://github.com/SeanR-ScanR/TypeR.git
+   git clone https://github.com/ScanR/TypeR.git
    cd TypeR
    ```
 
