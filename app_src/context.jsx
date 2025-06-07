@@ -238,6 +238,17 @@ const reducer = (state, action) => {
       break;
     }
 
+    case "duplicateStyle": {
+      const styleToDup = action.data || state.styles.find((s) => s.id === state.currentStyleId);
+      if (styleToDup) {
+        const newStyleId = Math.random().toString(36).substr(2, 8);
+        const newStyle = { ...styleToDup, id: newStyleId, name: styleToDup.name + " copy" };
+        newState.styles = state.styles.concat(newStyle);
+        newState.currentStyleId = newStyleId;
+      }
+      break;
+    }
+
     case "setStyles": {
       newState.styles = action.data || [];
       break;

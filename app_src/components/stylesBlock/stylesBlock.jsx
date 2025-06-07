@@ -137,6 +137,7 @@ FolderItem.propTypes = {
 const StyleItem = React.memo(function StyleItem(props) {
   const textStyle = props.style.textProps.layerText.textStyleRange[0]?.textStyle || {};
   const styleObject = getStyleObject(textStyle);
+  const context = useContext();
   const openStyle = (e) => {
     e.stopPropagation();
     props.openStyle();
@@ -152,6 +153,10 @@ const StyleItem = React.memo(function StyleItem(props) {
       setActiveLayerText("", props.style);
     }
   };
+  const duplicateStyle = (e) => {
+    e.stopPropagation();
+    context.dispatch({ type: "duplicateStyle", data: props.style });
+  };
   return (
     <div id={props.style.id} className={"style-item hostBgdLight" + (props.active ? " m-current" : "")} onClick={props.selectStyle}>
       <div className="style-marker">
@@ -166,6 +171,9 @@ const StyleItem = React.memo(function StyleItem(props) {
       <div className="style-actions">
         <button className={"topcoat-icon-button--large--quiet" + (props.active ? " m-cta" : "")} title={locale.editStyle} onClick={openStyle}>
           <MdEdit size={16} />
+        </button>
+        <button className={"topcoat-icon-button--large--quiet" + (props.active ? " m-cta" : "")} title={locale.duplicateStyle} onClick={duplicateStyle}>
+          <FiCopy size={16} />
         </button>
         <button className={"topcoat-icon-button--large--quiet" + (props.active ? " m-cta" : "")} title={locale.insertStyle} onClick={insertStyle}>
           <FiArrowRightCircle size={16} />
