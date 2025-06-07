@@ -16,6 +16,7 @@ const storeFields = [
   "ignoreLinePrefixes",
   "defaultStyleId",
   "autoClosePSD",
+  "images",
   "shortcut",
   "language",
 ];
