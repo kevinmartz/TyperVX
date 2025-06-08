@@ -86,12 +86,17 @@ const EditStyleModal = React.memo(function EditStyleModal() {
   };
 
   const changeStrokeSize = (e) => {
-    setStroke({ ...stroke, size: parseFloat(e.target.value) || 0 });
+    const newSize = parseFloat(e.target.value) || 0;
+    setStroke({ ...stroke, size: newSize, enabled: newSize > 0 });
     setEdited(true);
   };
 
   const changeStrokeColor = (e) => {
-    setStroke({ ...stroke, color: { r: e.rgb.r, g: e.rgb.g, b: e.rgb.b } });
+    setStroke({
+      ...stroke,
+      color: { r: e.rgb.r, g: e.rgb.g, b: e.rgb.b },
+      enabled: true,
+    });
     setEdited(true);
   };
 
@@ -101,7 +106,11 @@ const EditStyleModal = React.memo(function EditStyleModal() {
       nativeAlert(locale.errorStyleCreation, locale.errorTitle, true);
       return false;
     }
-    const data = { name, folder, textProps, prefixes, prefixColor, stroke };
+    const fixedStroke = {
+      ...stroke,
+      enabled: stroke.size > 0 ? true : false,
+    };
+    const data = { name, folder, textProps, prefixes, prefixColor, stroke: fixedStroke };
     if (currentData.create) {
       data.id = Math.random().toString(36).substr(2, 8);
     } else {
