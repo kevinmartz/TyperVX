@@ -717,7 +717,7 @@ function openFile(path, autoClose) {
       var doc = app.documents[i];
       if (doc.id === _lastOpenedDocId) {
         try {
-          doc.close(SaveOptions.DONOTSAVECHANGES);
+          doc.close(SaveOptions.SAVECHANGES);
         } catch (e) {}
         break;
       }
