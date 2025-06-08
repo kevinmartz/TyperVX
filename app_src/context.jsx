@@ -363,7 +363,7 @@ const reducer = (state, action) => {
     const text = rawText.replace(ignorePrefix, "").replace(stylePrefix, "").trim();
     const isPage = rawText.match(/Page [0-9]+/);
     const ignore = !!ignorePrefix || !text || isPage;
-    if (isPage) {
+    if (isPage && newState.images.length) {
       last.push(linesCounter);
     }
     const index = ignore ? 0 : ++linesCounter;
