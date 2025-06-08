@@ -10,10 +10,34 @@ import { useContext } from "../../context";
 const TextBlock = React.memo(function TextBlock() {
   const context = useContext();
   const [focused, setFocused] = React.useState(false);
+  const lastOpenedPath = React.useRef(null);
   React.useEffect(resizeTextArea);
   React.useEffect(() => {
     scrollToLine(context.state.currentLineIndex, 1000);
   }, []);
+
+  React.useEffect(() => {
+    let pageIndex = 0;
+    let currentPage = 0;
+    for (const line of context.state.lines) {
+      if (line.ignore) {
+        const page = line.rawText.match(/Page ([0-9]+)/);
+        if (page && context.state.images[page[1] - 1]) {
+          const img = context.state.images[page[1] - 1];
+          currentPage = context.state.images.indexOf(img);
+        }
+      }
+      if (line.rawIndex === context.state.currentLineIndex) {
+        pageIndex = currentPage;
+        break;
+      }
+    }
+    const image = context.state.images[pageIndex];
+    if (image && image.path !== lastOpenedPath.current) {
+      openFile(image.path, context.state.autoClosePSD);
+      lastOpenedPath.current = image.path;
+    }
+  }, [context.state.currentLineIndex, context.state.autoClosePSD, context.state.images]);
 
   let currentPage = 0;
 
@@ -40,12 +64,6 @@ const TextBlock = React.memo(function TextBlock() {
         return currentImage.name;
       }
       return " ";
-    }
-    if (context.state.currentLineIndex === line.rawIndex && context.state.images[currentPage]) {
-      openFile(
-        context.state.images[currentPage].path,
-        context.state.autoClosePSD
-      );
     }
     return line.index;
   };
