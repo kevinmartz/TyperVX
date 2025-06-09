@@ -140,8 +140,9 @@
     width: calc(50% - 2px);
   }
 }
-.style-markers {
+.style-marker {
   flex: 0 0 auto;
+  margin-right: 6px;
 }
 .style-color {
   box-shadow: 0 0 4px 1px rgba(#000, 0.4);
