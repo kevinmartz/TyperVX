@@ -4,9 +4,10 @@ TypeR is a better version of TyperTools, a Photoshop extension designed for type
 
 ## Key Features
 
-- **Bug Fixes**: Multiple bugs from the original TyperTools have been fixed.  
-- **Text Smoothing Issue Resolved**: Fixed the bug that changed text smoothing from "Strong" to "Smooth" when increasing text size.  
-- **Stable Auto-Centering**: Text shape no longer changes when using auto-centering.  
+- **Bug Fixes**: Multiple bugs from the original TyperTools have been fixed.
+- Added **stroke (outline)** support to styles.
+- **Stable Auto-Centering**: Text shape no longer changes when using auto-centering.
+- **Auto-centering** now works without manual selection by automatically detecting the bubble shape (like in Typesetterer).
 - **Customizable Shortcuts**: You can now modify keyboard shortcuts. (+ added some new keyboard shortcuts)  
 - **Automatic Page Detection**: Automatically detects pages when importing.  
 - **Automatic Page Switching**: Automatically switches pages for seamless workflow.  
@@ -15,8 +16,8 @@ TypeR is a better version of TyperTools, a Photoshop extension designed for type
 - **Adaptive Size**: If no fixed text size is defined, the size of the selected layer will be used.  
 - **Line Break on Insert**: A line break is now automatically added when inserting text on the current layer.  
 - **Duplicate Style Folders**: You can now duplicate a style folder easily.  
-- **Export a Single Folder**: No need to export all parameters and font styles—just export/import one folder as needed.
-- **Change Language**: Select the interface language directly from the settings.
+- **Export a Single Folder**: No need to export all parameters and font styles, just export/import one (or more) folder as needed to share it your team members.
+- **Tag priority**: Style with the same prefix matching is now prioritized based on the currently selected folder.
 
 
 
