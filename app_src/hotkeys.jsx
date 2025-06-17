@@ -9,23 +9,17 @@ const SHIFT = "SHIFT";
 const ALT = "ALT";
 const WIN = "WIN";
 
-const repeatTime = 2000;
 const intervalTime = 50;
 let keyboardInterval = 0;
-let canRepeat = true;
 let keyUp = true;
+let lastAction = 0;
 
-const checkRepeatTime = (time = repeatTime) => {
-  if (canRepeat && keyUp) {
-    setTimeout(() => {
-      canRepeat = true;
-    }, time);
-    canRepeat = false;
-    keyUp = false;
-    return true;
-  } else {
-    return false;
-  }
+const checkRepeatTime = (time = 0) => {
+  const now = Date.now();
+  if (!keyUp || now - lastAction < time) return false;
+  lastAction = now;
+  keyUp = false;
+  return true;
 };
 
 const checkShortcut = (state, ref) => {
