@@ -544,7 +544,8 @@ function _changeActiveLayerTextSize() {
       newTextParams.layerText.paragraphStyleRange[0].paragraphStyle.burasagari = oldParStyle.burasagari || "burasagariNone";
       newTextParams.layerText.paragraphStyleRange[0].to = text.length;
     }
-    var newTextSize = newTextParams.layerText.textStyleRange[0].textStyle.size + changeActiveLayerTextSizeVal;
+    var oldSize = newTextParams.layerText.textStyleRange[0].textStyle.size;
+    var newTextSize = oldSize + changeActiveLayerTextSizeVal;
     newTextParams.layerText.textStyleRange[0].textStyle.size = newTextSize;
 
     // Ajuster l'interligne
@@ -564,11 +565,13 @@ function _changeActiveLayerTextSize() {
 
     newTextParams.layerText.textStyleRange[0].to = text.length;
     if (!isPoint) {
-      if (changeActiveLayerTextSizeVal > 0) {
-        newTextParams.layerText.textShape = [oldTextParams.layerText.textShape[0]];
-        newTextParams.layerText.textShape[0].bounds.bottom *= 1.12;
-        newTextParams.layerText.textShape[0].bounds.right *= 1.06;
-      }
+      var ratio = newTextSize / oldSize;
+      newTextParams.layerText.textShape = [oldTextParams.layerText.textShape[0]];
+      var shapeBounds = newTextParams.layerText.textShape[0].bounds;
+      shapeBounds.top *= ratio;
+      shapeBounds.left *= ratio;
+      shapeBounds.bottom *= ratio;
+      shapeBounds.right *= ratio;
     }
     jamText.setLayerText(newTextParams);
     var newBounds = _getCurrentTextLayerBounds();
