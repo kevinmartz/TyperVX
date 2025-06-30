@@ -274,6 +274,11 @@ const StyleDetails = React.memo(function StyleDetails(props) {
     const newProps = _.cloneDeep(props.textProps);
     const newStyle = newProps.layerText.textStyleRange[0].textStyle;
     newStyle.fontStyleName = style;
+    const font = fonts.find((f) => f.family === family && f.style === style);
+    if (font) {
+      newStyle.fontPostScriptName = font.postScriptName;
+      newStyle.fontName = font.name;
+    }
     props.setTextProps(newProps);
   };
 
