@@ -139,3 +139,12 @@
     margin-top: 0.3em;
   }
 }
+
+.shortcut-field {
+  display: flex;
+  align-items: center;
+  BUTTON {
+    margin-left: 4px;
+    flex-shrink: 0;
+  }
+}
