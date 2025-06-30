@@ -63,7 +63,9 @@ const SettingsModal = React.memo(function SettingsModal() {
   };
 
   const changeMiddleEast = (e) => {
-    setMiddleEast(e.target.checked);
+    const val = e.target.checked;
+    setMiddleEast(val);
+    context.dispatch({ type: "setMiddleEast", value: val });
     setEdited(true);
   };
 
