@@ -19,6 +19,9 @@ const SettingsModal = React.memo(function SettingsModal() {
   const [autoClosePSD, setAutoClosePSD] = React.useState(
     !!context.state.autoClosePSD
   );
+  const [autoScrollStyle, setAutoScrollStyle] = React.useState(
+    context.state.autoScrollStyle !== false
+  );
   const [checkUpdates, setCheckUpdates] = React.useState(
     context.state.checkUpdates !== false
   );
@@ -60,6 +63,10 @@ const SettingsModal = React.memo(function SettingsModal() {
 
   const changeAutoClosePSD = (e) => {
     setAutoClosePSD(e.target.checked);
+    setEdited(true);
+  };
+  const changeAutoScrollStyle = (e) => {
+    setAutoScrollStyle(e.target.checked);
     setEdited(true);
   };
 
@@ -111,6 +118,13 @@ const SettingsModal = React.memo(function SettingsModal() {
       context.dispatch({
         type: "setAutoClosePSD",
         value: autoClosePSD,
+      });
+    }
+
+    if (autoScrollStyle !== context.state.autoScrollStyle) {
+      context.dispatch({
+        type: "setAutoScrollStyle",
+        value: autoScrollStyle,
       });
     }
     if (checkUpdates !== context.state.checkUpdates) {
@@ -168,6 +182,7 @@ const SettingsModal = React.memo(function SettingsModal() {
             !data.defaultStyleId &&
             !data.language &&
             !data.autoClosePSD &&
+            !data.autoScrollStyle &&
             !data.textItemKind
           ) {
             const idMap = {};
@@ -316,6 +331,15 @@ const SettingsModal = React.memo(function SettingsModal() {
               <div className="field-input">
                 <label className="topcoat-checkbox">
                   <input type="checkbox" checked={autoClosePSD} onChange={changeAutoClosePSD} />
+                  <div className="topcoat-checkbox__checkmark"></div>
+                </label>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsAutoScrollStyleLabel}</div>
+              <div className="field-input">
+                <label className="topcoat-checkbox">
+                  <input type="checkbox" checked={autoScrollStyle} onChange={changeAutoScrollStyle} />
                   <div className="topcoat-checkbox__checkmark"></div>
                 </label>
               </div>

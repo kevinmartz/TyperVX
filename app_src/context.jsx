@@ -17,6 +17,7 @@ const storeFields = [
   "defaultStyleId",
   "autoClosePSD",
   "checkUpdates",
+  "autoScrollStyle",
   "images",
   "shortcut",
   "language",
@@ -53,6 +54,7 @@ const initialState = {
   defaultStyleId: null,
   autoClosePSD: false,
   checkUpdates: config.checkUpdates,
+  autoScrollStyle: storage.data?.autoScrollStyle !== false,
   modalType: null,
   modalData: {},
   images: [],
@@ -293,6 +295,11 @@ const reducer = (state, action) => {
     break;
   }
 
+  case "setAutoScrollStyle": {
+    newState.autoScrollStyle = !!action.value;
+    break;
+  }
+
   case "setLanguage": {
     newState.language = action.lang || "auto";
     break;
@@ -431,7 +438,7 @@ const reducer = (state, action) => {
   if (newState.currentStyle && newState.currentStyleId !== state.currentStyleId) {
     const folder = newState.currentStyle.folder || "unsorted";
     if (!newState.openFolders.includes(folder)) newState.openFolders.push(folder);
-    scrollToStyle(newState.currentStyleId);
+    if (newState.autoScrollStyle) scrollToStyle(newState.currentStyleId);
   }
   if (thenScroll) {
     scrollToLine(newState.currentLineIndex);
