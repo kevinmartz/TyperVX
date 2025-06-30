@@ -147,11 +147,15 @@ fi
 rm -rf "${DESTDIR}"
 mkdir -p "${DESTDIR}"
 
-for item in app CSXS icons locale themes .debug; do
+for item in app CSXS icons locale .debug; do
   if [ -e "${SRCDIR}/${item}" ]; then
     cp -rf "${SRCDIR}/${item}" "${DESTDIR}/${item}"
   fi
 done
+
+if [ -e "${SRCDIR}/themes" ]; then
+  cp -rf "${SRCDIR}/themes" "${DESTDIR}/app/"
+fi
 
 if [ -e "${SRCDIR}/__storage" ]; then
   cp -f "${SRCDIR}/__storage" "${DESTDIR}/storage"
