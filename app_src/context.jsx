@@ -445,6 +445,16 @@ const useContext = () => React.useContext(Context);
 const ContextProvider = React.memo(function ContextProvider(props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   React.useEffect(() => dispatch({}), []);
+
+  const defaultStyleRef = React.useRef('');
+  React.useEffect(() => {
+    const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+    const indexLink = links.find((l) => !l.id && l.getAttribute('href'));
+    if (indexLink) {
+      defaultStyleRef.current = indexLink.getAttribute('href');
+      indexLink.remove();
+    }
+  }, []);
   React.useEffect(() => {
     if (state.checkUpdates) {
       checkUpdate(config.appVersion).then((data) => {
@@ -460,7 +470,7 @@ const ContextProvider = React.memo(function ContextProvider(props) {
     if (state.theme && state.theme !== 'default') {
       link.setAttribute('href', `./themes/${state.theme}.css`);
     } else {
-      link.setAttribute('href', '');
+      link.setAttribute('href', defaultStyleRef.current || './index.css');
     }
   }, [state.theme]);
   return <Context.Provider value={{ state, dispatch }}>{props.children}</Context.Provider>;

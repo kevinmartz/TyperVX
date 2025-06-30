@@ -153,6 +153,10 @@ for item in app CSXS icons locale .debug; do
   fi
 done
 
+if [ -e "${SRCDIR}/themes" ]; then
+  cp -rf "${SRCDIR}/themes" "${DESTDIR}/app/"
+fi
+
 if [ -e "${SRCDIR}/__storage" ]; then
   cp -f "${SRCDIR}/__storage" "${DESTDIR}/storage"
   rm -f "${SRCDIR}/__storage"

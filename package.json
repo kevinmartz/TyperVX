@@ -6,9 +6,9 @@
     "since 2012"
   ],
   "scripts": {
-    "build": "rimraf app && webpack --mode=production",
-    "build_dev": "rimraf app && webpack --mode=development",
-    "build_watch": "rimraf app && webpack --mode=development --watch"
+    "build": "node clean.js app && webpack --mode=production && node copyThemes.js",
+    "build_dev": "node clean.js app && webpack --mode=development && node copyThemes.js",
+    "build_watch": "node clean.js app && webpack --mode=development --watch && node copyThemes.js"
   },
   "dependencies": {
     "@babel/cli": "^7.15.7",
