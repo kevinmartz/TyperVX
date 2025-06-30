@@ -20,6 +20,7 @@ const storeFields = [
   "images",
   "shortcut",
   "language",
+  "theme",
 ];
 
 const defaultShortcut = {
@@ -55,6 +56,7 @@ const initialState = {
   modalData: {},
   images: [],
   language: "auto",
+  theme: "default",
   ...storage.data,
   shortcut: { ...defaultShortcut, ...(storage.data?.shortcut || {}) },
 };
@@ -294,6 +296,11 @@ const reducer = (state, action) => {
     break;
   }
 
+  case "setTheme": {
+    newState.theme = action.theme || "default";
+    break;
+  }
+
     case "setModal": {
       newState.modalType = action.modal || null;
       newState.modalData = action.data || {};
@@ -441,6 +448,16 @@ const useContext = () => React.useContext(Context);
 const ContextProvider = React.memo(function ContextProvider(props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   React.useEffect(() => dispatch({}), []);
+
+  const defaultStyleRef = React.useRef('');
+  React.useEffect(() => {
+    const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+    const indexLink = links.find((l) => !l.id && l.getAttribute('href'));
+    if (indexLink) {
+      defaultStyleRef.current = indexLink.getAttribute('href');
+      indexLink.remove();
+    }
+  }, []);
   React.useEffect(() => {
     if (state.checkUpdates) {
       checkUpdate(config.appVersion).then((data) => {
@@ -450,6 +467,15 @@ const ContextProvider = React.memo(function ContextProvider(props) {
       });
     }
   }, [state.checkUpdates]);
+  React.useEffect(() => {
+    const link = document.getElementById('themeStyle');
+    if (!link) return;
+    if (state.theme && state.theme !== 'default') {
+      link.setAttribute('href', `./themes/${state.theme}.css`);
+    } else {
+      link.setAttribute('href', defaultStyleRef.current || './index.css');
+    }
+  }, [state.theme]);
   return <Context.Provider value={{ state, dispatch }}>{props.children}</Context.Provider>;
 });
 ContextProvider.propTypes = {
