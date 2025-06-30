@@ -108,6 +108,9 @@
   color: rgba(#fff, 0);
   background: #fff;
   flex-grow: 2;
+  &[dir="rtl"] {
+    padding: 0 7px 0 5px;
+  }
   .text-line.m-current & {
     background: #bed6ef;
   }

@@ -71,7 +71,7 @@ const TextBlock = React.memo(function TextBlock() {
 
   return (
     <React.Fragment>
-      <div className="text-lines" dir={direction}>
+      <div className="text-lines">
         {context.state.lines.map((line) => (
           <div key={line.rawIndex} className={classNameLine(line, context)}>
             <div className="text-line-num">{getTextLineNum(line)}</div>
