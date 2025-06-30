@@ -242,6 +242,45 @@ function _setLayerStroke(stroke) {
   executeAction(charIDToTypeID("setd"), d, DialogModes.NO);
 }
 
+function _setDiacXOffset(val) {
+  var d = new ActionDescriptor();
+  var r = new ActionReference();
+  r.putProperty(charIDToTypeID("Prpr"), charIDToTypeID("TxtS"));
+  r.putEnumerated(charIDToTypeID("TxLr"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
+  d.putReference(charIDToTypeID("null"), r);
+
+  var t = new ActionDescriptor();
+  t.putInteger(stringIDToTypeID("textOverrideFeatureName"), 808466486);
+  t.putInteger(stringIDToTypeID("typeStyleOperationType"), 3);
+  t.putUnitDouble(stringIDToTypeID("diacXOffset"), charIDToTypeID("#Pxl"), val);
+  d.putObject(charIDToTypeID("T   "), charIDToTypeID("TxtS"), t);
+
+  executeAction(charIDToTypeID("setd"), d, DialogModes.NO);
+}
+
+function _setMarkYOffset(val) {
+  var d = new ActionDescriptor();
+  var r = new ActionReference();
+  r.putProperty(charIDToTypeID("Prpr"), charIDToTypeID("TxtS"));
+  r.putEnumerated(charIDToTypeID("TxLr"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
+  d.putReference(charIDToTypeID("null"), r);
+
+  var t = new ActionDescriptor();
+  t.putInteger(stringIDToTypeID("textOverrideFeatureName"), 808466488);
+  t.putInteger(stringIDToTypeID("typeStyleOperationType"), 3);
+  t.putUnitDouble(stringIDToTypeID("markYDistFromBaseline"), charIDToTypeID("#Pxl"), val);
+  d.putObject(charIDToTypeID("T   "), charIDToTypeID("TxtS"), t);
+
+  executeAction(charIDToTypeID("setd"), d, DialogModes.NO);
+}
+
+function _applyMiddleEast(textStyle) {
+  if (!textStyle) return;
+  if (textStyle.diacXOffset != null) _setDiacXOffset(textStyle.diacXOffset);
+  if (textStyle.markYDistFromBaseline != null)
+    _setMarkYOffset(textStyle.markYDistFromBaseline);
+}
+
 var securitySize = 20;
 
 function _createAndSetLayerText(data, width, height) {
@@ -272,6 +311,7 @@ function _createAndSetLayerText(data, width, height) {
     target: ["<reference>", [["textLayer", ["<class>", null]]]],
     using: jamText.toLayerTextObject(data.style.textProps),
   });
+  _applyMiddleEast(data.style.textProps.layerText.textStyleRange[0].textStyle);
   if (data.style.stroke) {
     _setLayerStroke(data.style.stroke);
   }
@@ -407,6 +447,7 @@ function _setActiveLayerText() {
     newTextParams.layerText.textShape[0].bounds.bottom *= 15;
     newTextParams.typeUnit = oldTextParams.typeUnit;
     jamText.setLayerText(newTextParams);
+    _applyMiddleEast(newTextParams.layerText.textStyleRange[0].textStyle);
     if (dataStyle && dataStyle.stroke) {
       _setLayerStroke(dataStyle.stroke);
     }
@@ -574,6 +615,7 @@ function _changeActiveLayerTextSize() {
       shapeBounds.right *= ratio;
     }
     jamText.setLayerText(newTextParams);
+    _applyMiddleEast(newTextParams.layerText.textStyleRange[0].textStyle);
     var newBounds = _getCurrentTextLayerBounds();
     var offsetX = oldBounds.xMid - newBounds.xMid;
     var offsetY = oldBounds.yMid - newBounds.yMid;
