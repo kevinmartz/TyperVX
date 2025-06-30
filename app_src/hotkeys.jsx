@@ -82,6 +82,12 @@ const HotkeysListner = React.memo(function HotkeysListner() {
     } else if (checkShortcut(realState, context.state.shortcut.decrease)) {
       if (!checkRepeatTime(300)) return;
       changeActiveLayerTextSize(-1);
+    } else if (checkShortcut(realState, context.state.shortcut.insertText)) {
+      if (!checkRepeatTime()) return;
+      const line = context.state.currentLine || { text: "" };
+      setActiveLayerText(line.text, null, (ok) => {
+        if (ok) context.dispatch({ type: "nextLine", add: true });
+      });
     } else {
       keyUp = true;
     }
