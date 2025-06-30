@@ -15,6 +15,7 @@ const SettingsModal = React.memo(function SettingsModal() {
   const [defaultStyleId, setDefaultStyleId] = React.useState(context.state.defaultStyleId || "");
   const [language, setLanguage] = React.useState(context.state.language || "auto");
   const [theme, setTheme] = React.useState(context.state.theme || "default");
+  const [direction, setDirection] = React.useState(context.state.direction || "ltr");
   const [autoClosePSD, setAutoClosePSD] = React.useState(
     !!context.state.autoClosePSD
   );
@@ -49,6 +50,11 @@ const SettingsModal = React.memo(function SettingsModal() {
 
   const changeTheme = (e) => {
     setTheme(e.target.value);
+    setEdited(true);
+  };
+
+  const changeDirection = (e) => {
+    setDirection(e.target.value);
     setEdited(true);
   };
 
@@ -93,6 +99,12 @@ const SettingsModal = React.memo(function SettingsModal() {
       context.dispatch({
         type: "setTheme",
         theme,
+      });
+    }
+    if (direction !== context.state.direction) {
+      context.dispatch({
+        type: "setDirection",
+        direction,
       });
     }
     if (autoClosePSD !== context.state.autoClosePSD) {
@@ -287,6 +299,15 @@ const SettingsModal = React.memo(function SettingsModal() {
                       </option>
                     );
                   })}
+                </select>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsDirectionLabel}</div>
+              <div className="field-input">
+                <select value={direction} onChange={changeDirection} className="topcoat-textarea">
+                  <option value="ltr">{locale.settingsDirectionLtr}</option>
+                  <option value="rtl">{locale.settingsDirectionRtl}</option>
                 </select>
               </div>
             </div>
