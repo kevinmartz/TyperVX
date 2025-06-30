@@ -52,6 +52,7 @@ const initialState = {
     previous: ["CTRL", "TAB"],
     increase: ["CTRL", "SHIFT", "PLUS"],
     decrease: ["CTRL", "SHIFT", "MINUS"],
+    insertText: ["WIN", "V"],
   },
   ...storage.data,
 };
