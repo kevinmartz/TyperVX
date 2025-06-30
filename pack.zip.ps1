@@ -13,6 +13,7 @@ New-Item -Type Dir .\\$name\\app
 New-Item -Type Dir .\\$name\\CSXS
 New-Item -Type Dir .\\$name\\icons
 New-Item -Type Dir .\\$name\\locale
+New-Item -Type Dir .\\$name\\themes
 
 Copy-Item .\\install_win.cmd .\\$name -force
 Copy-Item .\\install_mac.sh .\\$name -force
@@ -20,6 +21,7 @@ Copy-item .\\app\\* .\\$name\\app -force -recurse
 Copy-item .\\CSXS\\* .\\$name\\CSXS -force -recurse
 Copy-item .\\icons\\* .\\$name\\icons -force -recurse
 Copy-item .\\locale\\* .\\$name\\locale -force -recurse
+Copy-item .\\themes\\* .\\$name\\themes -force -recurse
 
 Compress-Archive .\\$name .\\$name.zip
 

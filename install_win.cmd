@@ -70,6 +70,7 @@ xcopy app "%Directory%\app\" /E/Y
 xcopy CSXS "%Directory%\CSXS\" /E/Y
 xcopy icons "%Directory%\icons\" /E/Y
 xcopy locale "%Directory%\locale\" /E/Y
+xcopy themes "%Directory%\themes\" /E/Y
 if exist .debug copy .debug "%Directory%\.debug" /Y
 if exist __storage (
     copy __storage "%Directory%\storage" /Y
