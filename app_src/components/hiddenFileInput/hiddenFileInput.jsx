@@ -19,7 +19,12 @@ export default React.forwardRef(function HiddenFileInput(_, ref) {
         const baseName = f.name.replace(/\.[^.]+$/, "");
         return { name: f.name, baseName, path: f.path || f.name };
       })
-      .sort((a, b) => a.baseName.localeCompare(b.baseName));
+      .sort((a, b) =>
+        a.baseName.localeCompare(b.baseName, undefined, {
+          numeric: true,
+          sensitivity: "base",
+        })
+      );
 
     context.dispatch({ type: "setImages", images });
     e.target.value = "";
