@@ -21,6 +21,7 @@ const storeFields = [
   "shortcut",
   "language",
   "theme",
+  "direction",
 ];
 
 const defaultShortcut = {
@@ -57,6 +58,7 @@ const initialState = {
   images: [],
   language: "auto",
   theme: "default",
+  direction: "ltr",
   ...storage.data,
   shortcut: { ...defaultShortcut, ...(storage.data?.shortcut || {}) },
 };
@@ -298,6 +300,11 @@ const reducer = (state, action) => {
 
   case "setTheme": {
     newState.theme = action.theme || "default";
+    break;
+  }
+
+  case "setDirection": {
+    newState.direction = action.direction || "ltr";
     break;
   }
 

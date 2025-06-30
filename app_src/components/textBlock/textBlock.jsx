@@ -9,6 +9,7 @@ import { useContext } from "../../context";
 
 const TextBlock = React.memo(function TextBlock() {
   const context = useContext();
+  const direction = context.state.direction || "ltr";
   const [focused, setFocused] = React.useState(false);
   const lastOpenedPath = React.useRef(null);
   React.useEffect(resizeTextArea);
@@ -70,14 +71,14 @@ const TextBlock = React.memo(function TextBlock() {
 
   return (
     <React.Fragment>
-      <div className="text-lines">
+      <div className="text-lines" dir={direction}>
         {context.state.lines.map((line) => (
           <div key={line.rawIndex} className={classNameLine(line, context)}>
             <div className="text-line-num">{getTextLineNum(line)}</div>
             <div className="text-line-select" title={line.ignore ? "" : locale.selectLine}>
               {line.ignore ? " " : <FiTarget size={14} onClick={() => context.dispatch({ type: "setCurrentLineIndex", index: line.rawIndex })} />}
             </div>
-            <div className="text-line-text">
+            <div className="text-line-text" dir={direction}>
               {line.ignorePrefix ? (
                 <React.Fragment>
                   <span className="text-line-ignore-prefix">{line.ignorePrefix}</span>
@@ -108,9 +109,9 @@ const TextBlock = React.memo(function TextBlock() {
           </div>
         ))}
       </div>
-      <textarea className="text-area" value={context.state.text} onChange={(e) => context.dispatch({ type: "setText", text: e.target.value })} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+      <textarea className="text-area" dir={direction} value={context.state.text} onChange={(e) => context.dispatch({ type: "setText", text: e.target.value })} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
       {!context.state.lines.length && !focused && (
-        <div className="text-message">
+        <div className="text-message" dir={direction}>
           <div>{locale.pasteTextHint}</div>
         </div>
       )}
