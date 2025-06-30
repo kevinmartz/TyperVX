@@ -16,6 +16,7 @@ const SettingsModal = React.memo(function SettingsModal() {
   const [language, setLanguage] = React.useState(context.state.language || "auto");
   const [theme, setTheme] = React.useState(context.state.theme || "default");
   const [direction, setDirection] = React.useState(context.state.direction || "ltr");
+  const [middleEast, setMiddleEast] = React.useState(!!context.state.middleEast);
   const [autoClosePSD, setAutoClosePSD] = React.useState(
     !!context.state.autoClosePSD
   );
@@ -58,6 +59,11 @@ const SettingsModal = React.memo(function SettingsModal() {
 
   const changeDirection = (e) => {
     setDirection(e.target.value);
+    setEdited(true);
+  };
+
+  const changeMiddleEast = (e) => {
+    setMiddleEast(e.target.checked);
     setEdited(true);
   };
 
@@ -112,6 +118,12 @@ const SettingsModal = React.memo(function SettingsModal() {
       context.dispatch({
         type: "setDirection",
         direction,
+      });
+    }
+    if (middleEast !== context.state.middleEast) {
+      context.dispatch({
+        type: "setMiddleEast",
+        value: middleEast,
       });
     }
     if (autoClosePSD !== context.state.autoClosePSD) {
@@ -324,6 +336,15 @@ const SettingsModal = React.memo(function SettingsModal() {
                   <option value="ltr">{locale.settingsDirectionLtr}</option>
                   <option value="rtl">{locale.settingsDirectionRtl}</option>
                 </select>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsMiddleEastLabel}</div>
+              <div className="field-input">
+                <label className="topcoat-checkbox">
+                  <input type="checkbox" checked={middleEast} onChange={changeMiddleEast} />
+                  <div className="topcoat-checkbox__checkmark"></div>
+                </label>
               </div>
             </div>
             <div className="field hostBrdTopContrast">

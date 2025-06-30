@@ -23,6 +23,7 @@ const storeFields = [
   "language",
   "theme",
   "direction",
+  "middleEast",
 ];
 
 const defaultShortcut = {
@@ -61,6 +62,7 @@ const initialState = {
   language: "auto",
   theme: "default",
   direction: "ltr",
+  middleEast: false,
   ...storage.data,
   shortcut: { ...defaultShortcut, ...(storage.data?.shortcut || {}) },
 };
@@ -312,6 +314,11 @@ const reducer = (state, action) => {
 
   case "setDirection": {
     newState.direction = action.direction || "ltr";
+    break;
+  }
+
+  case "setMiddleEast": {
+    newState.middleEast = !!action.value;
     break;
   }
 

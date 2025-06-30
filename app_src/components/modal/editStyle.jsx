@@ -245,6 +245,7 @@ const EditStyleModal = React.memo(function EditStyleModal() {
 });
 
 const StyleDetails = React.memo(function StyleDetails(props) {
+  const context = useContext();
   const fonts = getUserFonts();
   const textStyle = props.textProps.layerText.textStyleRange[0].textStyle;
   const paragStyle = props.textProps.layerText.paragraphStyleRange[0].paragraphStyle;
@@ -465,6 +466,24 @@ const StyleDetails = React.memo(function StyleDetails(props) {
           </div>
         </div>
       </div>
+      {context.state.middleEast && (
+        <div className="style-edit-props-row">
+          <div className="style-edit-props-col">
+            <div className="style-edit-props-icon" title={locale.editStyleDiacXOffset}>
+              <GiHorizontalFlip size={24} />
+            </div>
+            <input type="number" value={textStyle.diacXOffset || 0} onChange={(e) => changeProp("diacXOffset", Number(e.target.value) || 0)} className="topcoat-text-input--large" />
+            <span className="style-edit-props-unit">{unit}</span>
+          </div>
+          <div className="style-edit-props-col">
+            <div className="style-edit-props-icon" title={locale.editStyleMarkYOffset}>
+              <GiVerticalFlip size={24} />
+            </div>
+            <input type="number" value={textStyle.markYDistFromBaseline || 100} onChange={(e) => changeProp("markYDistFromBaseline", Number(e.target.value) || 0)} className="topcoat-text-input--large" />
+            <span className="style-edit-props-unit">{unit}</span>
+          </div>
+        </div>
+      )}
       <div className="style-edit-props-row">
         <div className="style-edit-props-col">
           <div className="style-edit-props-icon" title={locale.editStyleAntiAlias}>

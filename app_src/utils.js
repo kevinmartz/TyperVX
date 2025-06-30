@@ -258,6 +258,7 @@ const getDefaultStyle = () => {
             autoKern: "metricsKern",
             fontCaps: "normal",
             digitSet: "defaultDigits",
+            diacXOffset: 0,
             markYDistFromBaseline: 100,
             otbaseline: "normal",
             ligature: false,
