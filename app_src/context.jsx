@@ -23,6 +23,17 @@ const storeFields = [
   "theme",
 ];
 
+const defaultShortcut = {
+  add: ["WIN", "CTRL"],
+  center: ["WIN", "ALT"],
+  apply: ["WIN", "SHIFT"],
+  next: ["CTRL", "ENTER"],
+  previous: ["CTRL", "TAB"],
+  increase: ["CTRL", "SHIFT", "PLUS"],
+  decrease: ["CTRL", "SHIFT", "MINUS"],
+  insertText: ["WIN", "V"],
+};
+
 const initialState = {
   notFirstTime: false,
   initiated: false,
@@ -46,16 +57,8 @@ const initialState = {
   images: [],
   language: "auto",
   theme: "default",
-  shortcut: {
-    add: ["WIN", "CTRL"],
-    center: ["WIN", "ALT"],
-    apply: ["WIN", "SHIFT"],
-    next: ["CTRL", "ENTER"],
-    previous: ["CTRL", "TAB"],
-    increase: ["CTRL", "SHIFT", "PLUS"],
-    decrease: ["CTRL", "SHIFT", "MINUS"],
-  },
   ...storage.data,
+  shortcut: { ...defaultShortcut, ...(storage.data?.shortcut || {}) },
 };
 
 const reducer = (state, action) => {
