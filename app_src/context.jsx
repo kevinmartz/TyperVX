@@ -17,10 +17,25 @@ const storeFields = [
   "defaultStyleId",
   "autoClosePSD",
   "checkUpdates",
+  "autoScrollStyle",
   "images",
   "shortcut",
   "language",
+  "theme",
+  "direction",
+  "middleEast",
 ];
+
+const defaultShortcut = {
+  add: ["WIN", "CTRL"],
+  center: ["WIN", "ALT"],
+  apply: ["WIN", "SHIFT"],
+  next: ["CTRL", "ENTER"],
+  previous: ["CTRL", "TAB"],
+  increase: ["CTRL", "SHIFT", "PLUS"],
+  decrease: ["CTRL", "SHIFT", "MINUS"],
+  insertText: ["WIN", "V"],
+};
 
 const initialState = {
   notFirstTime: false,
@@ -40,20 +55,16 @@ const initialState = {
   defaultStyleId: null,
   autoClosePSD: false,
   checkUpdates: config.checkUpdates,
+  autoScrollStyle: storage.data?.autoScrollStyle !== false,
   modalType: null,
   modalData: {},
   images: [],
   language: "auto",
-  shortcut: {
-    add: ["WIN", "CTRL"],
-    center: ["WIN", "ALT"],
-    apply: ["WIN", "SHIFT"],
-    next: ["CTRL", "ENTER"],
-    previous: ["CTRL", "TAB"],
-    increase: ["CTRL", "SHIFT", "PLUS"],
-    decrease: ["CTRL", "SHIFT", "MINUS"],
-  },
+  theme: "default",
+  direction: "ltr",
+  middleEast: false,
   ...storage.data,
+  shortcut: { ...defaultShortcut, ...(storage.data?.shortcut || {}) },
 };
 
 const reducer = (state, action) => {
@@ -219,8 +230,8 @@ const reducer = (state, action) => {
 
     case "saveStyle": {
       if (typeof action.data.prefixes === "string") {
-        const arr = action.data.prefixes.split(/\s+/);
-        action.data.prefixes = arr.filter(Boolean);
+        const arr = action.data.prefixes.split(/(?:\r?\n|;)/);
+        action.data.prefixes = arr.map((p) => p.trim()).filter(Boolean);
       } else if (!Array.isArray(action.data.prefixes)) {
         action.data.prefixes = [];
       }
@@ -260,8 +271,8 @@ const reducer = (state, action) => {
       } else if (Array.isArray(action.data)) {
         newState.ignoreLinePrefixes = action.data;
       } else if (typeof action.data === "string") {
-        const arr = action.data.split(/\s+/);
-        newState.ignoreLinePrefixes = arr.filter(Boolean);
+        const arr = action.data.split(/(?:\r?\n|;)/);
+        newState.ignoreLinePrefixes = arr.map((p) => p.trim()).filter(Boolean);
       }
       break;
     }
@@ -286,8 +297,28 @@ const reducer = (state, action) => {
     break;
   }
 
+  case "setAutoScrollStyle": {
+    newState.autoScrollStyle = !!action.value;
+    break;
+  }
+
   case "setLanguage": {
     newState.language = action.lang || "auto";
+    break;
+  }
+
+  case "setTheme": {
+    newState.theme = action.theme || "default";
+    break;
+  }
+
+  case "setDirection": {
+    newState.direction = action.direction || "ltr";
+    break;
+  }
+
+  case "setMiddleEast": {
+    newState.middleEast = !!action.value;
     break;
   }
 
@@ -414,7 +445,7 @@ const reducer = (state, action) => {
   if (newState.currentStyle && newState.currentStyleId !== state.currentStyleId) {
     const folder = newState.currentStyle.folder || "unsorted";
     if (!newState.openFolders.includes(folder)) newState.openFolders.push(folder);
-    scrollToStyle(newState.currentStyleId);
+    if (newState.autoScrollStyle) scrollToStyle(newState.currentStyleId);
   }
   if (thenScroll) {
     scrollToLine(newState.currentLineIndex);
@@ -438,6 +469,16 @@ const useContext = () => React.useContext(Context);
 const ContextProvider = React.memo(function ContextProvider(props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   React.useEffect(() => dispatch({}), []);
+
+  const defaultStyleRef = React.useRef('');
+  React.useEffect(() => {
+    const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+    const indexLink = links.find((l) => !l.id && l.getAttribute('href'));
+    if (indexLink) {
+      defaultStyleRef.current = indexLink.getAttribute('href');
+      indexLink.remove();
+    }
+  }, []);
   React.useEffect(() => {
     if (state.checkUpdates) {
       checkUpdate(config.appVersion).then((data) => {
@@ -447,6 +488,15 @@ const ContextProvider = React.memo(function ContextProvider(props) {
       });
     }
   }, [state.checkUpdates]);
+  React.useEffect(() => {
+    const link = document.getElementById('themeStyle');
+    if (!link) return;
+    if (state.theme && state.theme !== 'default') {
+      link.setAttribute('href', `./themes/${state.theme}.css`);
+    } else {
+      link.setAttribute('href', defaultStyleRef.current || './index.css');
+    }
+  }, [state.theme]);
   return <Context.Provider value={{ state, dispatch }}>{props.children}</Context.Provider>;
 });
 ContextProvider.propTypes = {

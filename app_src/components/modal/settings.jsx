@@ -11,11 +11,19 @@ import Shortcut from "./shortCut";
 const SettingsModal = React.memo(function SettingsModal() {
   const context = useContext();
   const [pastePointText, setPastePointText] = React.useState(context.state.pastePointText ? "1" : "");
-  const [ignoreLinePrefixes, setIgnoreLinePrefixes] = React.useState(context.state.ignoreLinePrefixes.join(" "));
+  const [ignoreLinePrefixes, setIgnoreLinePrefixes] = React.useState(
+    context.state.ignoreLinePrefixes.join("\n")
+  );
   const [defaultStyleId, setDefaultStyleId] = React.useState(context.state.defaultStyleId || "");
   const [language, setLanguage] = React.useState(context.state.language || "auto");
+  const [theme, setTheme] = React.useState(context.state.theme || "default");
+  const [direction, setDirection] = React.useState(context.state.direction || "ltr");
+  const [middleEast, setMiddleEast] = React.useState(!!context.state.middleEast);
   const [autoClosePSD, setAutoClosePSD] = React.useState(
     !!context.state.autoClosePSD
+  );
+  const [autoScrollStyle, setAutoScrollStyle] = React.useState(
+    context.state.autoScrollStyle !== false
   );
   const [checkUpdates, setCheckUpdates] = React.useState(
     context.state.checkUpdates !== false
@@ -46,8 +54,29 @@ const SettingsModal = React.memo(function SettingsModal() {
     setEdited(true);
   };
 
+  const changeTheme = (e) => {
+    setTheme(e.target.value);
+    setEdited(true);
+  };
+
+  const changeDirection = (e) => {
+    setDirection(e.target.value);
+    setEdited(true);
+  };
+
+  const changeMiddleEast = (e) => {
+    const val = e.target.checked;
+    setMiddleEast(val);
+    context.dispatch({ type: "setMiddleEast", value: val });
+    setEdited(true);
+  };
+
   const changeAutoClosePSD = (e) => {
     setAutoClosePSD(e.target.checked);
+    setEdited(true);
+  };
+  const changeAutoScrollStyle = (e) => {
+    setAutoScrollStyle(e.target.checked);
     setEdited(true);
   };
 
@@ -64,7 +93,7 @@ const SettingsModal = React.memo(function SettingsModal() {
         isPoint: !!pastePointText,
       });
     }
-    if (ignoreLinePrefixes !== context.state.ignoreLinePrefixes.join(" ")) {
+    if (ignoreLinePrefixes !== context.state.ignoreLinePrefixes.join("\n")) {
       context.dispatch({
         type: "setIgnoreLinePrefixes",
         data: ignoreLinePrefixes,
@@ -83,10 +112,35 @@ const SettingsModal = React.memo(function SettingsModal() {
       });
       setTimeout(() => window.location.reload(), 100);
     }
+    if (theme !== context.state.theme) {
+      context.dispatch({
+        type: "setTheme",
+        theme,
+      });
+    }
+    if (direction !== context.state.direction) {
+      context.dispatch({
+        type: "setDirection",
+        direction,
+      });
+    }
+    if (middleEast !== context.state.middleEast) {
+      context.dispatch({
+        type: "setMiddleEast",
+        value: middleEast,
+      });
+    }
     if (autoClosePSD !== context.state.autoClosePSD) {
       context.dispatch({
         type: "setAutoClosePSD",
         value: autoClosePSD,
+      });
+    }
+
+    if (autoScrollStyle !== context.state.autoScrollStyle) {
+      context.dispatch({
+        type: "setAutoScrollStyle",
+        value: autoScrollStyle,
       });
     }
     if (checkUpdates !== context.state.checkUpdates) {
@@ -144,6 +198,7 @@ const SettingsModal = React.memo(function SettingsModal() {
             !data.defaultStyleId &&
             !data.language &&
             !data.autoClosePSD &&
+            !data.autoScrollStyle &&
             !data.textItemKind
           ) {
             const idMap = {};
@@ -263,10 +318,53 @@ const SettingsModal = React.memo(function SettingsModal() {
               </div>
             </div>
             <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsThemeLabel}</div>
+              <div className="field-input">
+                <select value={theme} onChange={changeTheme} className="topcoat-textarea">
+                  {Object.keys(config.themes).map((code) => {
+                    const key = 'settingsTheme' + code
+                      .replace(/(^|-)(\w)/g, (m, p1, p2) => p2.toUpperCase());
+                    return (
+                      <option key={code} value={code}>
+                        {locale[key] || config.themes[code]}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsDirectionLabel}</div>
+              <div className="field-input">
+                <select value={direction} onChange={changeDirection} className="topcoat-textarea">
+                  <option value="ltr">{locale.settingsDirectionLtr}</option>
+                  <option value="rtl">{locale.settingsDirectionRtl}</option>
+                </select>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsMiddleEastLabel}</div>
+              <div className="field-input">
+                <label className="topcoat-checkbox">
+                  <input type="checkbox" checked={middleEast} onChange={changeMiddleEast} />
+                  <div className="topcoat-checkbox__checkmark"></div>
+                </label>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
               <div className="field-label">{locale.settingsAutoClosePsdLabel}</div>
               <div className="field-input">
                 <label className="topcoat-checkbox">
                   <input type="checkbox" checked={autoClosePSD} onChange={changeAutoClosePSD} />
+                  <div className="topcoat-checkbox__checkmark"></div>
+                </label>
+              </div>
+            </div>
+            <div className="field hostBrdTopContrast">
+              <div className="field-label">{locale.settingsAutoScrollStyleLabel}</div>
+              <div className="field-input">
+                <label className="topcoat-checkbox">
+                  <input type="checkbox" checked={autoScrollStyle} onChange={changeAutoScrollStyle} />
                   <div className="topcoat-checkbox__checkmark"></div>
                 </label>
               </div>

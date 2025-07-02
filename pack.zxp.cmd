@@ -14,6 +14,7 @@ xcopy app %tmpDir%\app\ /E/Y/C
 xcopy CSXS %tmpDir%\CSXS\ /E/Y/C
 xcopy icons %tmpDir%\icons\ /E/Y/C
 xcopy locale %tmpDir%\locale\ /E/Y/C
+xcopy themes %tmpDir%\app\themes\ /E/Y/C
 
 ZXPSignCmd -selfSignedCert RU SPB 34squad "34th squad" %pass% %sert%
 ZXPSignCmd -sign %tmpDir% %name%.zxp %sert% %pass% -tsa http://timestamp.digicert.com/

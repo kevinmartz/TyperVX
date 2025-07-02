@@ -242,6 +242,45 @@ function _setLayerStroke(stroke) {
   executeAction(charIDToTypeID("setd"), d, DialogModes.NO);
 }
 
+function _setDiacXOffset(val) {
+  var d = new ActionDescriptor();
+  var r = new ActionReference();
+  r.putProperty(charIDToTypeID("Prpr"), charIDToTypeID("TxtS"));
+  r.putEnumerated(charIDToTypeID("TxLr"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
+  d.putReference(charIDToTypeID("null"), r);
+
+  var t = new ActionDescriptor();
+  t.putInteger(stringIDToTypeID("textOverrideFeatureName"), 808466486);
+  t.putInteger(stringIDToTypeID("typeStyleOperationType"), 3);
+  t.putUnitDouble(stringIDToTypeID("diacXOffset"), charIDToTypeID("#Pxl"), val);
+  d.putObject(charIDToTypeID("T   "), charIDToTypeID("TxtS"), t);
+
+  executeAction(charIDToTypeID("setd"), d, DialogModes.NO);
+}
+
+function _setMarkYOffset(val) {
+  var d = new ActionDescriptor();
+  var r = new ActionReference();
+  r.putProperty(charIDToTypeID("Prpr"), charIDToTypeID("TxtS"));
+  r.putEnumerated(charIDToTypeID("TxLr"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
+  d.putReference(charIDToTypeID("null"), r);
+
+  var t = new ActionDescriptor();
+  t.putInteger(stringIDToTypeID("textOverrideFeatureName"), 808466488);
+  t.putInteger(stringIDToTypeID("typeStyleOperationType"), 3);
+  t.putUnitDouble(stringIDToTypeID("markYDistFromBaseline"), charIDToTypeID("#Pxl"), val);
+  d.putObject(charIDToTypeID("T   "), charIDToTypeID("TxtS"), t);
+
+  executeAction(charIDToTypeID("setd"), d, DialogModes.NO);
+}
+
+function _applyMiddleEast(textStyle) {
+  if (!textStyle) return;
+  if (textStyle.diacXOffset != null) _setDiacXOffset(textStyle.diacXOffset);
+  if (textStyle.markYDistFromBaseline != null)
+    _setMarkYOffset(textStyle.markYDistFromBaseline);
+}
+
 var securitySize = 20;
 
 function _createAndSetLayerText(data, width, height) {
@@ -272,6 +311,7 @@ function _createAndSetLayerText(data, width, height) {
     target: ["<reference>", [["textLayer", ["<class>", null]]]],
     using: jamText.toLayerTextObject(data.style.textProps),
   });
+  _applyMiddleEast(data.style.textProps.layerText.textStyleRange[0].textStyle);
   if (data.style.stroke) {
     _setLayerStroke(data.style.stroke);
   }
@@ -407,6 +447,7 @@ function _setActiveLayerText() {
     newTextParams.layerText.textShape[0].bounds.bottom *= 15;
     newTextParams.typeUnit = oldTextParams.typeUnit;
     jamText.setLayerText(newTextParams);
+    _applyMiddleEast(newTextParams.layerText.textStyleRange[0].textStyle);
     if (dataStyle && dataStyle.stroke) {
       _setLayerStroke(dataStyle.stroke);
     }
@@ -544,7 +585,8 @@ function _changeActiveLayerTextSize() {
       newTextParams.layerText.paragraphStyleRange[0].paragraphStyle.burasagari = oldParStyle.burasagari || "burasagariNone";
       newTextParams.layerText.paragraphStyleRange[0].to = text.length;
     }
-    var newTextSize = newTextParams.layerText.textStyleRange[0].textStyle.size + changeActiveLayerTextSizeVal;
+    var oldSize = newTextParams.layerText.textStyleRange[0].textStyle.size;
+    var newTextSize = oldSize + changeActiveLayerTextSizeVal;
     newTextParams.layerText.textStyleRange[0].textStyle.size = newTextSize;
 
     // Ajuster l'interligne
@@ -564,13 +606,16 @@ function _changeActiveLayerTextSize() {
 
     newTextParams.layerText.textStyleRange[0].to = text.length;
     if (!isPoint) {
-      if (changeActiveLayerTextSizeVal > 0) {
-        newTextParams.layerText.textShape = [oldTextParams.layerText.textShape[0]];
-        newTextParams.layerText.textShape[0].bounds.bottom *= 1.12;
-        newTextParams.layerText.textShape[0].bounds.right *= 1.06;
-      }
+      var ratio = newTextSize / oldSize;
+      newTextParams.layerText.textShape = [oldTextParams.layerText.textShape[0]];
+      var shapeBounds = newTextParams.layerText.textShape[0].bounds;
+      shapeBounds.top *= ratio;
+      shapeBounds.left *= ratio;
+      shapeBounds.bottom *= ratio;
+      shapeBounds.right *= ratio;
     }
     jamText.setLayerText(newTextParams);
+    _applyMiddleEast(newTextParams.layerText.textStyleRange[0].textStyle);
     var newBounds = _getCurrentTextLayerBounds();
     var offsetX = oldBounds.xMid - newBounds.xMid;
     var offsetY = oldBounds.yMid - newBounds.yMid;
