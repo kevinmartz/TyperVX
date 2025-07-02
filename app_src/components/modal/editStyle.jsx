@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { FiCopy, FiX, FiMinus } from "react-icons/fi";
 import { TiSortAlphabetically } from "react-icons/ti";
 import { GiVerticalFlip, GiHorizontalFlip } from "react-icons/gi";
+import { TbAlphabetArabic } from "react-icons/tb";
 import { MdDelete, MdCancel, MdSave, MdFormatColorText } from "react-icons/md";
 import { GrSubscript, GrSuperscript, GrBlockQuote, GrMonospace } from "react-icons/gr";
 import { BsTypeBold, BsTypeItalic, BsFonts, BsType, BsTypeUnderline, BsTypeStrikethrough } from "react-icons/bs";
@@ -245,6 +246,7 @@ const EditStyleModal = React.memo(function EditStyleModal() {
 });
 
 const StyleDetails = React.memo(function StyleDetails(props) {
+  const context = useContext();
   const fonts = getUserFonts();
   const textStyle = props.textProps.layerText.textStyleRange[0].textStyle;
   const paragStyle = props.textProps.layerText.paragraphStyleRange[0].paragraphStyle;
@@ -465,6 +467,26 @@ const StyleDetails = React.memo(function StyleDetails(props) {
           </div>
         </div>
       </div>
+      {context.state.middleEast && (
+        <div className="style-edit-props-row">
+          <div className="style-edit-props-col">
+            <div className="style-edit-props-icon double" title={locale.editStyleDiacXOffset}>
+              <TbAlphabetArabic size={12} />
+              <GiHorizontalFlip size={12} />
+            </div>
+            <input type="number" value={textStyle.diacXOffset || 0} onChange={(e) => changeProp("diacXOffset", Number(e.target.value) || 0)} className="topcoat-text-input--large" />
+            <span className="style-edit-props-unit">{unit}</span>
+          </div>
+          <div className="style-edit-props-col">
+            <div className="style-edit-props-icon double" title={locale.editStyleMarkYOffset}>
+              <TbAlphabetArabic size={12} />
+              <GiVerticalFlip size={12} />
+            </div>
+            <input type="number" value={textStyle.markYDistFromBaseline || 100} onChange={(e) => changeProp("markYDistFromBaseline", Number(e.target.value) || 0)} className="topcoat-text-input--large" />
+            <span className="style-edit-props-unit">{unit}</span>
+          </div>
+        </div>
+      )}
       <div className="style-edit-props-row">
         <div className="style-edit-props-col">
           <div className="style-edit-props-icon" title={locale.editStyleAntiAlias}>
