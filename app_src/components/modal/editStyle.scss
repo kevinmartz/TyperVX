@@ -96,6 +96,12 @@
     width: 30px;
     opacity: .4;
 }
+.style-edit-props-icon.double {
+    width: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .style-edit-props-unit {
     position: absolute;
     opacity: .4;
