@@ -230,8 +230,8 @@ const reducer = (state, action) => {
 
     case "saveStyle": {
       if (typeof action.data.prefixes === "string") {
-        const arr = action.data.prefixes.split(/\s+/);
-        action.data.prefixes = arr.filter(Boolean);
+        const arr = action.data.prefixes.split(/(?:\r?\n|;)/);
+        action.data.prefixes = arr.map((p) => p.trim()).filter(Boolean);
       } else if (!Array.isArray(action.data.prefixes)) {
         action.data.prefixes = [];
       }
@@ -271,8 +271,8 @@ const reducer = (state, action) => {
       } else if (Array.isArray(action.data)) {
         newState.ignoreLinePrefixes = action.data;
       } else if (typeof action.data === "string") {
-        const arr = action.data.split(/\s+/);
-        newState.ignoreLinePrefixes = arr.filter(Boolean);
+        const arr = action.data.split(/(?:\r?\n|;)/);
+        newState.ignoreLinePrefixes = arr.map((p) => p.trim()).filter(Boolean);
       }
       break;
     }

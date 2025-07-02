@@ -11,7 +11,9 @@ import Shortcut from "./shortCut";
 const SettingsModal = React.memo(function SettingsModal() {
   const context = useContext();
   const [pastePointText, setPastePointText] = React.useState(context.state.pastePointText ? "1" : "");
-  const [ignoreLinePrefixes, setIgnoreLinePrefixes] = React.useState(context.state.ignoreLinePrefixes.join(" "));
+  const [ignoreLinePrefixes, setIgnoreLinePrefixes] = React.useState(
+    context.state.ignoreLinePrefixes.join("\n")
+  );
   const [defaultStyleId, setDefaultStyleId] = React.useState(context.state.defaultStyleId || "");
   const [language, setLanguage] = React.useState(context.state.language || "auto");
   const [theme, setTheme] = React.useState(context.state.theme || "default");
@@ -91,7 +93,7 @@ const SettingsModal = React.memo(function SettingsModal() {
         isPoint: !!pastePointText,
       });
     }
-    if (ignoreLinePrefixes !== context.state.ignoreLinePrefixes.join(" ")) {
+    if (ignoreLinePrefixes !== context.state.ignoreLinePrefixes.join("\n")) {
       context.dispatch({
         type: "setIgnoreLinePrefixes",
         data: ignoreLinePrefixes,
