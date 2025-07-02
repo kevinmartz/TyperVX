@@ -5,3 +5,4 @@ storage
 TypeR-*.zip
 TypeR-*.zxp
 .DS_Store
+install_mac.sh
