@@ -9,7 +9,7 @@
    ╚═╝      ╚═╝   ╚═╝     ╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝  ╚═╝       ╚═══╝  ╚══════╝
 ```
 
-<h1 style="color: #ff4444; font-size: 2.5em; margin: 0;">TYPERVX</h1>
+<h1 style="color: #ff4444; font-size: 2.5em; margin: 0;">
 
 </div>
 
